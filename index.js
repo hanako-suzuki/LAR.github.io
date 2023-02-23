@@ -16,9 +16,6 @@ let data
 let ave;
 let img_diff;
 
-var pre_img;
-var img_flag=0;
-
 promise.then(successCallback)
        .catch(errorCallback);
 
@@ -52,12 +49,4 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-function abs_diff(img){
-  if(imgflag != 0){
-    img_diff = cv2.absdiff(image, pre_img);
-  }else{
-    imgflag = 1;
-  }
-  pre_img = img;
-}
 
