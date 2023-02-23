@@ -22,8 +22,8 @@ function successCallback(stream) {
   const FPS = 30;
 
   /* ここから */
-  const width = video.clientWidth/4;
-  const height = video.clientHeight/4;
+  const width = canvas.width;
+  const height = canvas.height;
 
   const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
   const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
@@ -45,6 +45,7 @@ function successCallback(stream) {
     ctx.drawImage(video, 0, 0);
 
     videoMatPre.copyTo(videoMatNow);
+    // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
     videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
 
     // ２値化
