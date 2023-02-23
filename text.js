@@ -68,16 +68,18 @@ function successCallback(stream) {
       for (let i = 0; i < videoMatList.length; ++i) {
         // グレースケールにする
         cv.cvtColor(videoMatList[i], blackAndWhiteMatList[i], cv.COLOR_RGB2GRAY);
-        cv.imshow(`c${ i + 1 }`, videoMatList[i]);
-        cv.imshow(`m${ i + 1 }`, blackAndWhiteMatList[i]);
+        // cv.imshow(`c${ i + 1 }`, videoMatList[i]);
+        // cv.imshow(`m${ i + 1 }`, blackAndWhiteMatList[i]);
       }
 
-      diffMatList.push(new cv.Mat(height, width, cv.CV_8UC1));
+      // diffMatList.push(new cv.Mat(height, width, cv.CV_8UC1));
+      const diffMat = new cv.Mat(height, width, cv.CV_8UC1)
+      diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
+      cv.imshow('canvas', diffMat);
 
       // 差分を取る
-      cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1], diffMatList[0]);
-      cv.imshow('canvas', diffMatList[0]);
-      // ctx.putImageData(diffMatList[0],0,0);
+      // cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1], diffMatList[0]);
+      // cv.imshow('canvas', diffMatList[0]);
       
 
     //   const dilateSize = 8;
