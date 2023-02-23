@@ -1,16 +1,29 @@
-const Module = {
-  onRuntimeInitialized() {
-    const medias = {
-      audio: false,
-      video: {
-        facingMode: 'user'
-      }
-    };
-    const promise = navigator.mediaDevices.getUserMedia(medias);
+// const Module = {
+//   onRuntimeInitialized() {
+//     const medias = {
+//       audio: false,
+//       video: {
+//         facingMode: 'user'
+//       }
+//     };
+//     const promise = navigator.mediaDevices.getUserMedia(medias);
 
-    promise.then(successCallback).catch(errorCallback);
+//     promise.then(successCallback).catch(errorCallback);
+//   }
+// };
+
+const medias = {
+  audio: false,
+  video: {
+    facingMode: {
+      exact: "environment"
+    }
   }
 };
+// const video  = document.getElementById("video");
+// const canvas = document.getElementById("canvas");
+// const ctx = canvas.getContext("2d");
+// const promise = navigator.mediaDevices.getUserMedia(medias);
 
 function successCallback(stream) {
   const video = document.getElementById('video');
