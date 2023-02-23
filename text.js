@@ -11,11 +11,6 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const promise = navigator.mediaDevices.getUserMedia(medias);
 
-let imgData;
-let data
-let ave;
-let img_diff;
-
 promise.then(successCallback)
        .catch(errorCallback);
 
@@ -26,8 +21,6 @@ function successCallback(stream) {
   const video = document.getElementById('video');
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-  // const canvasList = [].slice.call(document.querySelectorAll('canvas'));
-  // const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
   video.oncanplay = () => {
     const width = video.clientWidth;
