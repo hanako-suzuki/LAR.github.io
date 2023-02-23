@@ -58,7 +58,7 @@ function successCallback(stream) {
     const delay = 1000 / FPS - (Date.now() - begin);
 
     setTimeout(processVideo, delay);
-    processVideo();
+    // processVideo();
   }
   /* ここまで */
   // video.oncanplay = () => {
