@@ -16,7 +16,7 @@ const medias = {
     audio: false,
     video: {
       facingMode: {
-        exact: "environment"
+        exact: "user"
       }
     }
 };
@@ -40,7 +40,7 @@ function successCallback(stream) {
   video.oncanplay = () => {
     const width = video.clientWidth / 4; // 適当にリサイズ
     const height = video.clientHeight / 4; // 適当にリサイズ
-    const bitwiseMat = new cv.Mat(height, width, cv.CV_8UC1);
+    // const bitwiseMat = new cv.Mat(height, width, cv.CV_8UC1);
     // const distCanvas = document.getElementById('dist');
     // const distCtx = distCanvas.getContext('2d');
 
