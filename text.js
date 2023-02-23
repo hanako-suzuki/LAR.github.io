@@ -38,8 +38,8 @@ function successCallback(stream) {
 //   const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
   video.oncanplay = () => {
-    const width = video.clientWidth / 4; // 適当にリサイズ
-    const height = video.clientHeight / 4; // 適当にリサイズ
+    const width = video.clientWidth; // 適当にリサイズ
+    const height = video.clientHeight; // 適当にリサイズ
     // const bitwiseMat = new cv.Mat(height, width, cv.CV_8UC1);
     // const distCanvas = document.getElementById('dist');
     // const distCtx = distCanvas.getContext('2d');
