@@ -3,7 +3,7 @@ const Module = {
     const medias = {
       audio: false,
       video: {
-        facingMode: 'environment'
+        facingMode: 'user'
       }
     };
     const promise = navigator.mediaDevices.getUserMedia(medias);
@@ -24,12 +24,10 @@ function successCallback(stream) {
   const blackAndWhiteMatList = [];
   const FPS = 30;
   const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-//   const canvasList = [].slice.call(document.querySelectorAll('canvas'));
-//   const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
   video.oncanplay = () => {
-    const width = video.clientWidth; // 適当にリサイズ
-    const height = video.clientHeight; // 適当にリサイズ
+    const width = video.clientWidth/4; // 適当にリサイズ
+    const height = video.clientHeight/4; // 適当にリサイズ
 
     for (let i = 0; i < imgLength; ++i) {
       videoMatList.push(new cv.Mat(height, width, cv.CV_8UC4));
@@ -50,13 +48,14 @@ function successCallback(stream) {
 
       videoMatList[0].copyTo(videoMatList[1]); // 1フレーム前
       videoMatList[0].data.set(ctx.getImageData(0, 0, width, height).data); // 現在
+      cv.imshow('canvas', videoMatList[0]);
 
       // グレースケールにする
-      cv.cvtColor(videoMatList[0], blackAndWhiteMatList[0], cv.COLOR_RGB2GRAY);
-      cv.cvtColor(videoMatList[1], blackAndWhiteMatList[1], cv.COLOR_RGB2GRAY);
+      // cv.cvtColor(videoMatList[0], blackAndWhiteMatList[0], cv.COLOR_RGB2GRAY);
+      // cv.cvtColor(videoMatList[1], blackAndWhiteMatList[1], cv.COLOR_RGB2GRAY);
 
-      diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
-      cv.imshow('canvas', diffMat);
+      // diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
+      // cv.imshow('canvas', diffMat);
 
       const delay = 1000 / FPS - (Date.now() - begin);
 
