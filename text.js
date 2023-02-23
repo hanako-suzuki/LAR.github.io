@@ -64,18 +64,19 @@ function successCallback(stream) {
     //   videoMatList[1].copyTo(videoMatList[2]); // 2フレーム前
       videoMatList[0].copyTo(videoMatList[1]); // 1フレーム前
       videoMatList[0].data.set(ctx.getImageData(0, 0, width, height).data); // 現在
+      cv.imshow('canvas', videoMatList[0]);
 
-      for (let i = 0; i < videoMatList.length; ++i) {
-        // グレースケールにする
-        cv.cvtColor(videoMatList[i], blackAndWhiteMatList[i], cv.COLOR_RGB2GRAY);
-        // cv.imshow(`c${ i + 1 }`, videoMatList[i]);
-        // cv.imshow(`m${ i + 1 }`, blackAndWhiteMatList[i]);
-      }
+      // for (let i = 0; i < videoMatList.length; ++i) {
+      //   // グレースケールにする
+      //   cv.cvtColor(videoMatList[i], blackAndWhiteMatList[i], cv.COLOR_RGB2GRAY);
+      //   // cv.imshow(`c${ i + 1 }`, videoMatList[i]);
+      //   // cv.imshow(`m${ i + 1 }`, blackAndWhiteMatList[i]);
+      // }
 
-      // diffMatList.push(new cv.Mat(height, width, cv.CV_8UC1));
-      const diffMat = new cv.Mat(height, width, cv.CV_8UC1)
-      diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
-      cv.imshow('canvas', diffMat);
+      // // diffMatList.push(new cv.Mat(height, width, cv.CV_8UC1));
+      // const diffMat = new cv.Mat(height, width, cv.CV_8UC1)
+      // diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
+      // cv.imshow('canvas', diffMat);
 
       // 差分を取る
       // cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1], diffMatList[0]);
