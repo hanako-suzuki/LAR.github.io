@@ -36,6 +36,7 @@ function successCallback(stream) {
   // video.playsInline = true;
   // const canvas = document.getElementById('canvas');
   // const ctx = canvas.getContext('2d');
+  // // test
   const imgLength = 2;
   const videoMatList = [];
   const blackAndWhiteMatList = [];
