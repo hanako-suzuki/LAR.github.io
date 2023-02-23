@@ -30,9 +30,8 @@ function successCallback(stream) {
   // const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
   video.oncanplay = () => {
-    const width = video.clientWidth / 4;
-    const height = video.clientHeight / 4;
-    const bitwiseMat = new cv.Mat(height, width, cv.CV_8UC1);
+    const width = video.clientWidth;
+    const height = video.clientHeight;
 
     const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
     const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
