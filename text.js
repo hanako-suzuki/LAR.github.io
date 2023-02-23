@@ -16,11 +16,11 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const FPS = 4;
+  const FPS = 30;
 
   /* ここから */
-  const width = video.clientWidth/4;
-  const height = video.clientHeight/4;
+  const width = video.clientWidth/20;
+  const height = video.clientHeight/20;
 
   const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
   const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
@@ -56,6 +56,7 @@ function successCallback(stream) {
     const delay = 1000 / FPS - (Date.now() - begin);
 
     setTimeout(processVideo, delay);
+    processVideo();
   }
   /* ここまで */
   // video.oncanplay = () => {
