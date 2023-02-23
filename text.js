@@ -56,7 +56,7 @@ function successCallback(stream) {
 
     setTimeout(processVideo, delay);
   }
-
+  /* ここまで */
   // video.oncanplay = () => {
   //   const width = video.clientWidth;
   //   const height = video.clientHeight;
