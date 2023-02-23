@@ -7,6 +7,9 @@ const medias = {
   }
 };
 const video  = document.getElementById("video");
+video.autoplay = true;
+video.muted = true;
+video.playsInline = true;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const promise = navigator.mediaDevices.getUserMedia(medias);
@@ -19,8 +22,8 @@ function successCallback(stream) {
   const FPS = 30;
 
   /* ここから */
-  const width = video.clientWidth/20;
-  const height = video.clientHeight/20;
+  const width = video.clientWidth;
+  const height = video.clientHeight;
 
   const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
   const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
