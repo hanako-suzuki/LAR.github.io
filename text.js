@@ -24,6 +24,7 @@ const medias = {
 // const canvas = document.getElementById("canvas");
 // const ctx = canvas.getContext("2d");
 // const promise = navigator.mediaDevices.getUserMedia(medias);
+// // test
 
 function successCallback(stream) {
   const video = document.getElementById('video');
