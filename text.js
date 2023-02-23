@@ -16,7 +16,7 @@ const medias = {
     audio: false,
     video: {
       facingMode: {
-        exact: "user"
+        exact: "environment"
       }
     }
 };
@@ -77,6 +77,7 @@ function successCallback(stream) {
       // 差分を取る
       cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1], diffMatList[0]);
       cv.imshow('canvas', diffMatList[0]);
+      // ctx.putImageData(diffMatList[0],0,0);
       
 
     //   const dilateSize = 8;
