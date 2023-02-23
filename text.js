@@ -21,6 +21,9 @@ const medias = {
     }
 };
 
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 const promise = navigator.mediaDevices.getUserMedia(medias);
 promise.then(successCallback)
        .catch(errorCallback);
@@ -31,9 +34,6 @@ function successCallback(stream) {
   const blackAndWhiteMatList = [];
   const diffMatList = [];
   const FPS = 30;
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
 //   const canvasList = [].slice.call(document.querySelectorAll('canvas'));
 //   const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
