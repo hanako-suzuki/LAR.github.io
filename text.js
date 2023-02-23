@@ -76,7 +76,7 @@ function successCallback(stream) {
       // }
       const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      cv.imshow("canvas", diffMatList[i]);
+      cv.imshow("canvas", diffMat);
 
       // const dilateSize = 8;
 
