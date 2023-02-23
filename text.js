@@ -12,22 +12,6 @@ const Module = {
   }
 };
 
-// const medias = {
-//     audio: false,
-//     video: {
-//       facingMode: {
-//         exact: "environment"
-//       }
-//     }
-// };
-
-// const video = document.getElementById('video');
-// const canvas = document.getElementById('canvas');
-// const ctx = canvas.getContext('2d');
-// const promise = navigator.mediaDevices.getUserMedia(medias);
-// promise.then(successCallback)
-//        .catch(errorCallback);
-
 function successCallback(stream) {
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
@@ -35,8 +19,8 @@ function successCallback(stream) {
   const imgLength = 2;
   const videoMatList = [];
   const blackAndWhiteMatList = [];
-  const diffMatList = [];
   const FPS = 30;
+  const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
 //   const canvasList = [].slice.call(document.querySelectorAll('canvas'));
 //   const contextList = canvasList.map((canvas) => canvas.getContext('2d'));
 
@@ -68,7 +52,6 @@ function successCallback(stream) {
       cv.cvtColor(videoMatList[0], blackAndWhiteMatList[0], cv.COLOR_RGB2GRAY);
       cv.cvtColor(videoMatList[1], blackAndWhiteMatList[1], cv.COLOR_RGB2GRAY);
 
-      const diffMat = new cv.Mat(height, width, cv.CV_8UC1)
       diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
       cv.imshow('canvas', diffMat);
 
