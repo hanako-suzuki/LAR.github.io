@@ -18,9 +18,6 @@ function successCallback(stream) {
   video.srcObject = stream;
   const imgLength = 2;
   const FPS = 30;
-  const video = document.getElementById('video');
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
 
   video.oncanplay = () => {
     const width = video.clientWidth;
