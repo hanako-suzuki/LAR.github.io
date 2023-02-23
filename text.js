@@ -16,7 +16,6 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const imgLength = 2;
   const FPS = 30;
 
   video.oncanplay = () => {
@@ -44,9 +43,11 @@ function successCallback(stream) {
       videoMatPre.copyTo(videoMatNow);
       videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
 
+      // ２値化
       cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
       cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
 
+      // 差分取得
       const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
       cv.imshow("canvas", diffMat);
