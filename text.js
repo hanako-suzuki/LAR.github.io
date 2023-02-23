@@ -66,14 +66,14 @@ function successCallback(stream) {
 
       videoMatList[0].copyTo(videoMatList[1]); // 1フレーム前
       videoMatList[0].data.set(ctx.getImageData(0, 0, width, height).data); // 現在
-      cv.imshow('canvas', videoMatList[0]);
+      // cv.imshow('canvas', videoMatList[0]);
 
       // グレースケールにする
-      // cv.cvtColor(videoMatList[0], blackAndWhiteMatList[0], cv.COLOR_RGB2GRAY);
-      // cv.cvtColor(videoMatList[1], blackAndWhiteMatList[1], cv.COLOR_RGB2GRAY);
+      cv.cvtColor(videoMatList[0], blackAndWhiteMatList[0], cv.COLOR_RGB2GRAY);
+      cv.cvtColor(videoMatList[1], blackAndWhiteMatList[1], cv.COLOR_RGB2GRAY);
 
-      // diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
-      // cv.imshow('canvas', diffMat);
+      diffMat = cv.absdiff(blackAndWhiteMatList[0], blackAndWhiteMatList[1]);
+      cv.imshow('canvas', diffMat);
 
       const delay = 1000 / FPS - (Date.now() - begin);
 
