@@ -40,11 +40,11 @@ function successCallback(stream) {
 
     // ctx.drawImage(video, 0, 0, width, height);
     ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
     videoMatPre.copyTo(videoMatNow);
-    // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
-    videoMatNow.data.set(cv.matFromImageData(imageData));
+    videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
+    // videoMatNow.data.set(cv.matFromImageData(imageData));
 
     // ２値化
     cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
