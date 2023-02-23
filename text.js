@@ -25,8 +25,8 @@ function successCallback(stream) {
   const width = video.clientWidth;
   const height = video.clientHeight;
 
-  const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
-  const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
+  const videoMatPre = new cv.Mat(height, width, cv.CV_8UC1);
+  const videoMatNow = new cv.Mat(height, width, cv.CV_8UC1);
   const blackAndWhiteMatPre = new cv.Mat(height, width, cv.CV_8UC1);
   const blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
