@@ -46,7 +46,7 @@ function successCallback(stream) {
     videoMatPre.copyTo(videoMatNow);
     videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
-    cv.imshow("canvas", videoMatNow);
+    cv.imshow("canvas", videoMatPre);
 
     // ２値化
     // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
