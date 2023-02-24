@@ -31,10 +31,8 @@ function successCallback(stream) {
   const blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
 
-  canvasList.forEach((canvas) => {
-    canvas.width = width;
-    canvas.height = height;
-  });
+  canvas.width = width;
+  canvas.height = height;
 
   processVideo();
 
