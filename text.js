@@ -22,7 +22,7 @@ function successCallback(stream) {
   const FPS = 30;
 
   /* ここから */
-  const width = canvas.width;
+  const width = canvas.width*1.5;
   const height = canvas.height*4;
 
   const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
