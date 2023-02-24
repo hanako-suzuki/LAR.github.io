@@ -45,16 +45,17 @@ function successCallback(stream) {
     videoMatPre.copyTo(videoMatNow);
     videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
+    cv.imshow("canvas", videoMatNow);
 
     // ２値化
-    cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
-    cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-    // cv.imshow("canvas", blackAndWhiteMatNow);
+    // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
+    // cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
+    // // cv.imshow("canvas", blackAndWhiteMatNow);
 
-    // 差分取得
-    const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-    cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-    cv.imshow("canvas", diffMat);
+    // // 差分取得
+    // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
+    // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+    // cv.imshow("canvas", diffMat);
 
     const delay = 1000 / FPS - (Date.now() - begin);
 
