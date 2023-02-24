@@ -31,8 +31,8 @@ function successCallback(stream) {
   const blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
 
-  canvas.width = width;
-  canvas.height = height;
+  // canvas.width = width;
+  // canvas.height = height;
 
   processVideo();
 
@@ -40,7 +40,7 @@ function successCallback(stream) {
     const begin = Date.now();
 
     // ctx.drawImage(video, 0, 0, width, height);
-    ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width/5, canvas.height/5);
+    ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
     // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
     videoMatPre.copyTo(videoMatNow);
