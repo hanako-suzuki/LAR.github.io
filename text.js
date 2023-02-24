@@ -42,7 +42,7 @@ function successCallback(stream) {
     const begin = Date.now();
 
     // ctx.drawImage(video, 0, 0, width, height);
-    ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width/5, canvas.height/5);
     // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
     videoMatPre.copyTo(videoMatNow);
