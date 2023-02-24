@@ -22,8 +22,8 @@ function successCallback(stream) {
   const FPS = 30;
 
   /* ここから */
-  const width = canvas.width/4;
-  const height = canvas.height/4;
+  const width = canvas.width/20;
+  const height = canvas.height/20;
 
   const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
   const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
@@ -31,8 +31,8 @@ function successCallback(stream) {
   const blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
 
-  // canvas.width = width;
-  // canvas.height = height;
+  canvas.width = width;
+  canvas.height = height;
 
   processVideo();
 
