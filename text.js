@@ -7,6 +7,9 @@ const medias = {
   }
 };
 const video  = document.getElementById("video");
+video.autoplay = true;
+video.muted = true;
+video.playsInline = true;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const promise = navigator.mediaDevices.getUserMedia(medias);
