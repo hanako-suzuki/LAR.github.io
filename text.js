@@ -43,10 +43,10 @@ function successCallback(stream) {
     ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
     // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-    videoMatPre.copyTo(videoMatNow);
+    // videoMatPre.copyTo(videoMatNow);
     videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
-    cv.imshow("canvas", videoMatPre);
+    
 
     // ２値化
     // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
@@ -57,6 +57,9 @@ function successCallback(stream) {
     // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
     // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
     // cv.imshow("canvas", diffMat);
+
+    videoMatPre.copyTo(videoMatNow);
+    cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
 
