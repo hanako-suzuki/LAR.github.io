@@ -81,7 +81,7 @@ function successCallback(stream) {
     // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
     // cv.imshow("canvas", diffMat);
 
-    videoMatPre.clone(videoMatNow);
+    videoMatPre = videoMatNow.clone();
     // cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
