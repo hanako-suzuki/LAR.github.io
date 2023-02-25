@@ -116,6 +116,7 @@ function successCallback(stream) {
     const color = [R_value, G_value, B_value];
 
     // チャネル補正
+    const n = 3;
     let ans_sum = 0;
     let ans = [0.0, 0.0, 0.0];
     for(let r=0; r<n; r++){
