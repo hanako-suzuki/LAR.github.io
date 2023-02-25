@@ -102,9 +102,9 @@ function successCallback(stream) {
     const color_bit = ["100","011","010","110","111","000","001","101"];
 
     // 読み取り範囲の平均輝度値を取得
-    let R_value = 0;
-    let G_value = 0;
-    let B_value = 0;
+    let R_value = 0.0;
+    let G_value = 0.0;
+    let B_value = 0.0;
     for(let i=x_l; i<=x_r; i++){
       for(let j=y_u; j<=y_d; j++){
         B_value += videoMatNow[j, i, 0]/4;
@@ -132,7 +132,8 @@ function successCallback(stream) {
       }
     }
     for(let r=0; r<n; r++){
-      ans[r] /= ans_sum;
+      if(ans_sum != 0)
+        ans[r] /= ans_sum;
     }
     const ans_x = 0.65*ans[0] + 0.3*ans[1] + 0.15*ans[2];
     const ans_y = 0.3*ans[0] + 0.6*ans[1] + 0.05*ans[2];
@@ -151,6 +152,7 @@ function successCallback(stream) {
     const bit = color_bit[min_id];
     // 色表示
     textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
+    // textArea.innerHTML = videoMatNow[10,10];
   }
 
   // チャネル行列計算
