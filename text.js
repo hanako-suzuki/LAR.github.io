@@ -34,10 +34,10 @@ function successCallback(stream) {
   const width = canvas.width*1.5;
   const height = canvas.height*4;
 
-  const videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
-  const videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
-  const blackAndWhiteMatPre = new cv.Mat(height, width, cv.CV_8UC1);
-  const blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
+  let videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
+  let videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
+  let blackAndWhiteMatPre = new cv.Mat(height, width, cv.CV_8UC1);
+  let blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
   let read_flag = 0;
   let H_inv;
@@ -57,6 +57,7 @@ function successCallback(stream) {
 
     // videoMatPre.copyTo(videoMatNow);
     videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
+    cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
     const R_pilot = [251, 124, 165];
@@ -80,7 +81,7 @@ function successCallback(stream) {
     // cv.imshow("canvas", diffMat);
 
     videoMatPre.copyTo(videoMatNow);
-    cv.imshow("canvas", videoMatPre);
+    // cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
 
