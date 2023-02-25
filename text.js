@@ -132,8 +132,9 @@ function successCallback(stream) {
       }
     }
     for(let r=0; r<n; r++){
-      if(ans_sum != 0)
+      if(ans_sum != 0){
         ans[r] /= ans_sum;
+      }
     }
     const ans_x = 0.65*ans[0] + 0.3*ans[1] + 0.15*ans[2];
     const ans_y = 0.3*ans[0] + 0.6*ans[1] + 0.05*ans[2];
@@ -151,8 +152,8 @@ function successCallback(stream) {
     }
     const bit = color_bit[min_id];
     // 色表示
-    textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
-    // textArea.innerHTML = videoMatNow[10,10];
+    // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
+    textArea.innerHTML = String(H_inv[0][0]);
   }
 
   // チャネル行列計算
