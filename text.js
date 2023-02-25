@@ -57,7 +57,7 @@ function successCallback(stream) {
     if(read_flag == 0){
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
-    color(VideoMatNow, H_inv);
+    color(videoMatNow, H_inv);
 
     
 
