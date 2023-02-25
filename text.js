@@ -80,7 +80,7 @@ function successCallback(stream) {
     // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
     // cv.imshow("canvas", diffMat);
 
-    videoMatPre.copyTo(videoMatNow);
+    videoMatPre.clone(videoMatNow);
     // cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
@@ -107,9 +107,10 @@ function successCallback(stream) {
     let B_value = 0.0;
     for(let i=x_l; i<=x_r; i++){
       for(let j=y_u; j<=y_d; j++){
-        B_value += videoMatNow[j, i, 0]/4;
-        G_value += videoMatNow[j, i, 1]/4;
-        R_value += videoMatNow[j, i, 2]/4;
+        let data = videoMatNow.get(j,i);
+        B_value += data[0]/4;
+        G_value += data[1]/4;
+        R_value += data[2]/4;
       }
     }
 
