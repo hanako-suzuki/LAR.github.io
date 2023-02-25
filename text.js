@@ -1,14 +1,14 @@
 const medias = {
   audio: false,
   video: {
-    width: {
-      min: 1280,
-      max: 1920,
-    },
-    height: {
-      min: 720,
-      max: 1080,
-    },  
+    // width: {
+    //   min: 1280,
+    //   max: 1920,
+    // },
+    // height: {
+    //   min: 720,
+    //   max: 1080,
+    // },  
     facingMode: {
       exact: "environment"
     }
