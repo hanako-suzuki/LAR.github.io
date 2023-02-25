@@ -58,7 +58,7 @@ function successCallback(stream) {
     // videoMatPre.copyTo(videoMatNow);
     // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
     videoMatNow = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    cv.imshow("canvas", videoMatNow);
+    // cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
     const R_pilot = [251, 124, 165];
@@ -82,7 +82,7 @@ function successCallback(stream) {
     // cv.imshow("canvas", diffMat);
 
     videoMatPre = videoMatNow.clone();
-    // cv.imshow("canvas", videoMatPre);
+    cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
 
@@ -144,7 +144,7 @@ function successCallback(stream) {
     // let color_dis = [0,0,0,0,0,0,0,0]; // 各シンボルとの距離を格納
     let tmp;
     let min_dis;
-    let min_id;
+    let min_id=0;
     for(let i=0; i<8; i++){
       tmp = Math.sqrt((x[i]-ans_x)**2 + (y[i]-ans_y)**2);
       if(i==0 || tmp<min_dis){
