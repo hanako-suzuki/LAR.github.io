@@ -56,7 +56,8 @@ function successCallback(stream) {
     // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
     // videoMatPre.copyTo(videoMatNow);
-    videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
+    // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
+    videoMatNow = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
     cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
