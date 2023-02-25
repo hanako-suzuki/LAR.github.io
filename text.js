@@ -148,7 +148,7 @@ function successCallback(stream) {
         min_id = i;
       }
     }
-    const bit = ave[min_id];
+    const bit = color_bit[min_id];
     // 色表示
     textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
   }
