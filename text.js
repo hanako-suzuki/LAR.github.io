@@ -108,10 +108,10 @@ function successCallback(stream) {
     let B_value = 0.0;
     for(let i=x_l; i<=x_r; i++){
       for(let j=y_u; j<=y_d; j++){
-        let data = videoMatNow.get(j,i);
-        B_value += data[0]/4;
+        let data = videoMatNow.ucharPtr(j,i);
+        R_value += data[0]/4;
         G_value += data[1]/4;
-        R_value += data[2]/4;
+        B_value += data[2]/4;
       }
     }
 
