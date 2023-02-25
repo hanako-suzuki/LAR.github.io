@@ -153,7 +153,7 @@ function successCallback(stream) {
     const bit = color_bit[min_id];
     // 色表示
     // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
-    textArea.innerHTML = String(color[0]) + ", " + String(videoMatNow[j, i, 0]);
+    textArea.innerHTML = String(color[0]) + ", " + String(videoMatNow[10, 10, 0]);
   }
 
   // チャネル行列計算
