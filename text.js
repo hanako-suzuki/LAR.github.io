@@ -117,7 +117,7 @@ function successCallback(stream) {
 
     // チャネル補正
     const n = 3;
-    let ans_sum = 0;
+    let ans_sum = 0.0;
     let ans = [0.0, 0.0, 0.0];
     for(let r=0; r<n; r++){
       let sum = 0;
@@ -153,7 +153,7 @@ function successCallback(stream) {
     const bit = color_bit[min_id];
     // 色表示
     // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
-    textArea.innerHTML = String(H_inv[0][0]);
+    textArea.innerHTML = String(color[0]) + ", " + String(videoMatNow[j, i, 0]);
   }
 
   // チャネル行列計算
