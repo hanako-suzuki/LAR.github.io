@@ -82,6 +82,7 @@ function successCallback(stream) {
     // cv.imshow("canvas", diffMat);
 
     videoMatPre = videoMatNow.clone();
+    cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
     cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
@@ -155,7 +156,7 @@ function successCallback(stream) {
     const bit = color_bit[min_id];
     // 色表示
     // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
-    textArea.innerHTML = String(color[0]) + ", " + color_name[min_id];
+    textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[2]) + ", " + color_name[min_id];
   }
 
   // チャネル行列計算
