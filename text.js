@@ -14,7 +14,7 @@ const medias = {
     }
   }
 };
-const video  = document.getElementById("video");
+const video = document.getElementById("video");
 video.autoplay = true;
 video.muted = true;
 video.playsInline = true;
@@ -68,8 +68,6 @@ function successCallback(stream) {
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
     color(videoMatNow, H_inv);
-
-    
 
     // ２値化
     // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
