@@ -68,7 +68,7 @@ function successCallback(stream) {
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
     color(videoMatNow, H_inv);
-    cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
+    // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
     // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
