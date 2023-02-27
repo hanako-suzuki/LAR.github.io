@@ -83,6 +83,10 @@ function successCallback(stream) {
     videoMatPre = videoMatNow.clone();
     // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
     cv.imshow("canvas", videoMatPre);
+    ctx.beginPath();       // 新しいパスを開始
+    ctx.moveTo(10, 10);    // ペンを (30, 50) へ移動
+    ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
+    ctx.stroke();          // パスを描画
 
     const delay = 1000 / FPS - (Date.now() - begin);
 
