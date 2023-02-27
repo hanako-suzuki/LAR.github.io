@@ -80,7 +80,7 @@ function successCallback(stream) {
     // cv.imshow("canvas", diffMat);
 
     videoMatPre = videoMatNow.clone();
-    cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
+    // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
     cv.imshow("canvas", videoMatPre);
 
     const delay = 1000 / FPS - (Date.now() - begin);
