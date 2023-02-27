@@ -61,9 +61,9 @@ function successCallback(stream) {
     // cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
-    const R_pilot = [251, 124, 165];
-    const G_pilot = [61, 158, 56];
-    const B_pilot = [0, 44, 167];
+    const R_pilot = [200, 15, 2];
+    const G_pilot = [35, 195, 2];
+    const B_pilot = [10, 0, 185];
     if(read_flag == 0){
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
