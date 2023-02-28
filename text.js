@@ -28,9 +28,7 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const FPS_camera = 30;
-  const FPS_color = 5;
-  let begin_color;
+  const FPS = 10;
 
   /* ここから */
   const width = canvas.width*1.5;
@@ -69,15 +67,13 @@ function successCallback(stream) {
     if(read_flag == 0){
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
-    if(read_flag==0 || Date.now()==begin_color-1000/FPS_color){
-      color(videoMatNow, H_inv);
-    }
+    color(videoMatNow, H_inv);
     // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
-    // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
-    // cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-    // // cv.imshow("canvas", blackAndWhiteMatNow);
+    cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
+    cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
+    cv.imshow("canvas", blackAndWhiteMatNow);
 
     // // 差分取得
     // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
@@ -86,15 +82,17 @@ function successCallback(stream) {
 
     videoMatPre = videoMatNow.clone();
     // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
-    cv.imshow("canvas", videoMatPre);
-    ctx.beginPath();       // 新しいパスを開始
-    ctx.moveTo(10, 10);    // ペンを (30, 50) へ移動
-    ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
-    ctx.stroke();          // パスを描画
+    // cv.imshow("canvas", videoMatPre);
 
-    const delay_camera = 1000 / FPS_camera - (Date.now() - begin);
+    // キャンバス上に線を描画
+    // ctx.beginPath();       // 新しいパスを開始
+    // ctx.moveTo(10, 10);    // ペンを (30, 50) へ移動
+    // ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
+    // ctx.stroke();          // パスを描画
 
-    setTimeout(processVideo, delay_camera);
+    const delay = 1000 / FPS - (Date.now() - begin);
+
+    setTimeout(processVideo, delay);
     // processVideo();
 
     read_flag = 1;
@@ -109,8 +107,6 @@ function successCallback(stream) {
     const y = [0.3,   0.6,  0.05,  0.4,    0.45,  0.2,   0.2,  0.35];
     const color_name = ["red", "green", "blue", "lightblue", "yellow", "navy", "purple", "orange"];
     const color_bit = ["100","011","010","110","111","000","001","101"];
-
-    begin_color = Date.now();
 
     // 読み取り範囲の平均輝度値を取得
     let R_value = 0.0;
