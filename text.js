@@ -74,14 +74,16 @@ function successCallback(stream) {
     cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
     if(read_flag !=0){
       cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-      cv.imshow("canvas", blackAndWhiteMatPre);
+      // cv.imshow("canvas", blackAndWhiteMatPre);
     }
     // cv.imshow("canvas", blackAndWhiteMatNow);
 
-    // // 差分取得
-    // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-    // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-    // cv.imshow("canvas", diffMat);
+    // 差分取得
+    if(read_flag != 0){
+      let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
+      cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      cv.imshow("canvas", diffMat);
+  }
 
     videoMatPre = videoMatNow.clone();
     // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
