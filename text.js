@@ -71,9 +71,9 @@ function successCallback(stream) {
     // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
-    // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
+    cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
     // cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-    // cv.imshow("canvas", blackAndWhiteMatNow);
+    cv.imshow("canvas", blackAndWhiteMatNow);
 
     // // 差分取得
     // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
