@@ -83,12 +83,12 @@ function successCallback(stream) {
       // 差分取得
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      // cv.imshow("canvas", diffMat);
+      cv.imshow("canvas", diffMat);
 
       // 矩形検出
-      let rect = new cv.Rect(100, 100, 200, 200);
-      let dst = diffMat.roi(rect);
-      cv.imshow("canvas", dst);
+      // let rect = new cv.Rect(100, 100, 200, 200);
+      // let dst = diffMat.roi(rect);
+      // cv.imshow("canvas", dst);
   }
 
     videoMatPre = videoMatNow.clone();
