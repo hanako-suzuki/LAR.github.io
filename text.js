@@ -28,7 +28,9 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const FPS = 1;
+  const FPS_camera = 30;
+  const FPS_color = 5;
+  let begin_color;
 
   /* ここから */
   const width = canvas.width*1.5;
@@ -67,7 +69,9 @@ function successCallback(stream) {
     if(read_flag == 0){
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
-    color(videoMatNow, H_inv);
+    if(read_flag==0 || Date.now()==begin_color-1000/FPS_color){
+      color(videoMatNow, H_inv);
+    }
     // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
@@ -88,9 +92,9 @@ function successCallback(stream) {
     ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
     ctx.stroke();          // パスを描画
 
-    const delay = 1000 / FPS - (Date.now() - begin);
+    const delay_camera = 1000 / FPS_camera - (Date.now() - begin);
 
-    setTimeout(processVideo, delay);
+    setTimeout(processVideo, delay_camera);
     // processVideo();
 
     read_flag = 1;
@@ -105,6 +109,8 @@ function successCallback(stream) {
     const y = [0.3,   0.6,  0.05,  0.4,    0.45,  0.2,   0.2,  0.35];
     const color_name = ["red", "green", "blue", "lightblue", "yellow", "navy", "purple", "orange"];
     const color_bit = ["100","011","010","110","111","000","001","101"];
+
+    begin_color = Date.now();
 
     // 読み取り範囲の平均輝度値を取得
     let R_value = 0.0;
