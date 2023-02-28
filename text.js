@@ -61,9 +61,9 @@ function successCallback(stream) {
     // cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
-    const R_pilot = [251, 124, 165];
-    const G_pilot = [61, 158, 56];
-    const B_pilot = [0, 44, 167];
+    const R_pilot = [200, 15, 2];
+    const G_pilot = [35, 195, 2];
+    const B_pilot = [10, 0, 185];
     if(read_flag == 0){
       H_inv = calc_H(R_pilot, G_pilot, B_pilot);
     }
@@ -71,9 +71,9 @@ function successCallback(stream) {
     // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
-    cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
-    cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-    cv.imshow("canvas", blackAndWhiteMatNow);
+    // cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
+    // cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
+    // cv.imshow("canvas", blackAndWhiteMatNow);
 
     // // 差分取得
     // const diffMat = new cv.Mat(height, width, cv.CV_8UC1);
@@ -82,7 +82,7 @@ function successCallback(stream) {
 
     videoMatPre = videoMatNow.clone();
     // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
-    // cv.imshow("canvas", videoMatPre);
+    cv.imshow("canvas", videoMatPre);
 
     // キャンバス上に線を描画
     // ctx.beginPath();       // 新しいパスを開始
