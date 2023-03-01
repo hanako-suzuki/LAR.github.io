@@ -23,6 +23,8 @@ const ctx = canvas.getContext("2d");
 const promise = navigator.mediaDevices.getUserMedia(medias);
 const textArea = document.getElementById("textArea");
 
+import LSD from './lsd/lsd';
+
 promise.then(successCallback)
        .catch(errorCallback);
 
@@ -89,6 +91,11 @@ function successCallback(stream) {
       // let rect = new cv.Rect(100, 100, 200, 200);
       // let dst = diffMat.roi(rect);
       // cv.imshow("canvas", dst);
+
+      // 線分検出 LSD
+      const detector = new LSD();
+      const lines = detector.detect(diffMat);
+      detector.drawSegments(ctx, lines);
   }
 
     videoMatPre = videoMatNow.clone();
