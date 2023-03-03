@@ -98,6 +98,7 @@ function successCallback(stream) {
       // detector.drawSegments(ctx, lines);
 
       // 線分検出 Hough
+      let lines = new cv.Mat();
       cv.Canny(diffMat, diffMat, 50, 200, 3);
       cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 30, 0, 0, 0, Math.PI);
       // draw lines
