@@ -113,7 +113,7 @@ function successCallback(stream) {
         let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
         cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
       }
-      cv.imshow('canvasOutput', diffMat);
+      cv.imshow("canvas", diffMat);
       diffMat.delete();
       lines.delete();
       blackAndWhiteMatNow.delete();
