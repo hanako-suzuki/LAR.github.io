@@ -85,7 +85,7 @@ function successCallback(stream) {
       // 差分取得
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      cv.imshow("canvas", diffMat);
+      // cv.imshow("canvas", diffMat);
 
       // 矩形検出
       // let rect = new cv.Rect(100, 100, 200, 200);
@@ -96,6 +96,29 @@ function successCallback(stream) {
       // const detector = new LSD();
       // const lines = detector.detect(diffMat);
       // detector.drawSegments(ctx, lines);
+
+      // 線分検出 Hough
+      cv.cvtColor(diffMat, diffMat, cv.COLOR_RGBA2GRAY, 0);
+      cv.Canny(diffMat, diffMat, 50, 200, 3);
+      cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 30, 0, 0, 0, Math.PI);
+      // draw lines
+      for (let i = 0; i < lines.rows; ++i) {
+        let rho = lines.data32F[i * 2];
+        let theta = lines.data32F[i * 2 + 1];
+        let a = Math.cos(theta);
+        let b = Math.sin(theta);
+        let x0 = a * rho;
+        let y0 = b * rho;
+        let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+        let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+        cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+      }
+      cv.imshow('canvasOutput', diffMat);
+      diffMat.delete();
+      lines.delete();
+      blackAndWhiteMatNow.delete();
+      blackAndWhiteMatPre.delete();
+      videoMatPre.delete();
   }
 
     videoMatPre = videoMatNow.clone();
