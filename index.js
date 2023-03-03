@@ -98,21 +98,23 @@ function successCallback(stream) {
       // detector.drawSegments(ctx, lines);
 
       // 線分検出 Hough
-      let lines = new cv.Mat();
-      cv.Canny(diffMat, diffMat, 50, 200, 3);
-      cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI);
-      // draw lines
-      for (let i = 0; i < lines.rows; ++i) {
-        let rho = lines.data32F[i * 2];
-        let theta = lines.data32F[i * 2 + 1];
-        let a = Math.cos(theta);
-        let b = Math.sin(theta);
-        let x0 = a * rho;
-        let y0 = b * rho;
-        let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-        let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-        cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
-        // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+      if(diffMat.width!=NaN){
+        let lines = new cv.Mat();
+        cv.Canny(diffMat, diffMat, 50, 200, 3);
+        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI);
+        // draw lines
+        for (let i = 0; i < lines.rows; ++i) {
+          let rho = lines.data32F[i * 2];
+          let theta = lines.data32F[i * 2 + 1];
+          let a = Math.cos(theta);
+          let b = Math.sin(theta);
+          let x0 = a * rho;
+          let y0 = b * rho;
+          let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+          let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+          cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+          // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+        }
       }
       cv.imshow("canvas", videoMatPre);
       // diffMat.delete();
