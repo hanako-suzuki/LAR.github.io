@@ -100,7 +100,7 @@ function successCallback(stream) {
       // 線分検出 Hough
       let lines = new cv.Mat();
       cv.Canny(diffMat, diffMat, 50, 200, 3);
-      cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 30, 0, 0, 0, Math.PI);
+      cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI);
       // draw lines
       for (let i = 0; i < lines.rows; ++i) {
         let rho = lines.data32F[i * 2];
@@ -111,9 +111,9 @@ function successCallback(stream) {
         let y0 = b * rho;
         let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
         let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-        cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+        cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
       }
-      cv.imshow("canvas", diffMat);
+      cv.imshow("canvas", videoMatPre);
       // diffMat.delete();
       // lines.delete();
       // blackAndWhiteMatNow.delete();
