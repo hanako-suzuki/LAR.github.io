@@ -113,11 +113,11 @@ function successCallback(stream) {
       //   cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
       // }
       cv.imshow("canvas", diffMat);
-      diffMat.delete();
+      // diffMat.delete();
       // lines.delete();
-      blackAndWhiteMatNow.delete();
-      blackAndWhiteMatPre.delete();
-      videoMatPre.delete();
+      // blackAndWhiteMatNow.delete();
+      // blackAndWhiteMatPre.delete();
+      // videoMatPre.delete();
   }
 
     videoMatPre = videoMatNow.clone();
