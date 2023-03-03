@@ -93,9 +93,9 @@ function successCallback(stream) {
       // cv.imshow("canvas", dst);
 
       // 線分検出 LSD
-      const detector = new LSD();
-      const lines = detector.detect(diffMat);
-      detector.drawSegments(ctx, lines);
+      // const detector = new LSD();
+      // const lines = detector.detect(diffMat);
+      // detector.drawSegments(ctx, lines);
   }
 
     videoMatPre = videoMatNow.clone();
