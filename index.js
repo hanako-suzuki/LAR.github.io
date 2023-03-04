@@ -101,7 +101,7 @@ function successCallback(stream) {
       if(diffMat.width!=NaN){
         let lines = new cv.Mat();
         cv.Canny(diffMat, diffMat, 50, 200, 3);
-        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 300, 0, 0, 0, Math.PI);
+        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI);
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
           let rho = lines.data32F[i * 2];
