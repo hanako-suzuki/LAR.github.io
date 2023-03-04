@@ -107,7 +107,7 @@ function successCallback(stream) {
           let rho = lines.data32F[i * 2];
           let theta = lines.data32F[i * 2 + 1];
           let tmp_theta = theta*180/Math.PI;
-          if((tmp_theta<30 & tmp_theta>-30) || tmp_theta>330){
+          if((tmp_theta<120 & tmp_theta>60) || (tmp_theta>240 & tmp_theta<300)){
             let a = Math.cos(theta);
             let b = Math.sin(theta);
             let x0 = a * rho;
