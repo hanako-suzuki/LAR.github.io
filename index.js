@@ -41,6 +41,9 @@ function successCallback(stream) {
   let blackAndWhiteMatPre = new cv.Mat(height, width, cv.CV_8UC1);
   let blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
+  let posLog = []; // 0:x 1:y 2: theta 3:frequency
+  const comp_length = 5;
+
   let read_flag = 0;
   let H_inv;
 
@@ -100,9 +103,15 @@ function successCallback(stream) {
 
       // 線分検出 Hough
       if(diffMat.width!=NaN){
+
+        if (posLog.length >= comp_length){ // comp_lengthの長さ分だけ前のものを保持して比較
+          posLog.pop(); // posLogの一番最後を削除
+        }
+        posLog.unshift([]); // posLogの一番最初に空の配列を追加
+
         let lines = new cv.Mat();
-        cv.Canny(diffMat, diffMat, 50, 200, 3);
-        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI);
+        cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
+        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
           let rho = lines.data32F[i * 2];
@@ -113,9 +122,28 @@ function successCallback(stream) {
             let b = Math.sin(theta);
             let x0 = a * rho;
             let y0 = b * rho;
-            let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-            let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-            cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+            posLog[0].push([x0, y0, theta, 0])
+            for(let i=1; i<posLog.length; i++){
+              for(let j=0; j<posLog[i].length; j++){
+                let tmp_x = posLog[i][j][0];
+                let tmp_y = posLog[i][j][1];
+                if(tmp_x-5<x0 & x0<tmp_x+5 & tmp_y-5<y0 & y0 < tmp_y+5){
+                  posLog[i][j][3] += 1;
+                }
+              }
+            }
+            if(posLog.length == comp_length){
+              for(let i=0; i<posLog[comp_length-1].length; i++){
+                if(posLog[comp_length-1][i][3] > comp_length*0.8){
+                  let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+                  let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+                  cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+                }
+              }
+            }
+            // let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+            // let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+            // cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
           }
           // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
         }
