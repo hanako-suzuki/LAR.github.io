@@ -106,13 +106,15 @@ function successCallback(stream) {
         for (let i = 0; i < lines.rows; ++i) {
           let rho = lines.data32F[i * 2];
           let theta = lines.data32F[i * 2 + 1];
-          let a = Math.cos(theta);
-          let b = Math.sin(theta);
-          let x0 = a * rho;
-          let y0 = b * rho;
-          let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-          let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-          cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+          if((theta<30 & theta>-30) || theta>330){
+            let a = Math.cos(theta);
+            let b = Math.sin(theta);
+            let x0 = a * rho;
+            let y0 = b * rho;
+            let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+            let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+            cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+          }
           // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
         }
       }
