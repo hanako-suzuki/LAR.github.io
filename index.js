@@ -49,6 +49,7 @@ function successCallback(stream) {
   canvas.height = height;
 
   processVideo();
+  processVideo();
 
   function processVideo() {
     const begin = Date.now();
