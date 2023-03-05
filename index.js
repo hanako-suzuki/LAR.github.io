@@ -154,7 +154,7 @@ function successCallback(stream) {
         // }
 
         // 始点と終点座標var.
-        cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
+        cv.HoughLinesP(diffMat, lines, 1, Math.PI / 180, 2, 0, 0);
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
             let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
