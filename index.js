@@ -189,14 +189,16 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          // targetLines = integlate_lines(targetLines, threshold_size, comp_length);
-          // let fuse_lines = fusion(targetLines, (height+width)/2);
-          // for(let i=0; i<fuse_lines.length; i++){
-          //   cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
-          // }
-          for(let i=0; i<targetLines.length; i++){
-            cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
+          targetLines = integlate_lines(targetLines, threshold_size, comp_length);
+          let fuse_lines = fusion(targetLines, (height+width)/2);
+          for(let i=0; i<fuse_lines.length; i++){
+            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
           }
+          // for(let i=0; i<targetLines.length; i++){
+          //   if(targetLines[i][3] > comp_length*0.8){
+          //     cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
+          //   }
+          // }
           posLog.pop(); // posLogの一番最後を削除
         }
       }
@@ -282,8 +284,8 @@ function successCallback(stream) {
 
   function fusion_lines(lineA, lineB, size){
     const distance = Math.abs(lineA[0].y - lineB[0].y);
-    const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].y, lineA[1].y)];
-    const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].y, lineB[1].y)];
+    const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
+    const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
 
     if(distance > size/100){
       // ２つの線が十分に離れていれば終了
