@@ -44,7 +44,7 @@ function successCallback(stream) {
 
   let posLog = []; // 0:x 1:y 2: theta 3:frequency
   const comp_length = 5;
-  let color = new cv.Scalar(255, 0, 0);
+  let colorRed = new cv.Scalar(255, 0, 0);
 
   let read_flag = 0;
   let H_inv;
@@ -188,7 +188,7 @@ function successCallback(stream) {
             if(posLog.length == comp_length){
               for(let i=0; i<posLog[comp_length-1].length; i++){
                 if(posLog[comp_length-1][i][2] > comp_length*0.8){
-                  cv.line(videoMatPre, startPoint, endPoint, color);
+                  cv.line(videoMatPre, startPoint, endPoint, colorRed);
                 }
               }
             }
@@ -244,7 +244,7 @@ function successCallback(stream) {
       }
     }
 
-    const color = [R_value, G_value, B_value];
+    const receptColor = [R_value, G_value, B_value];
 
     // チャネル補正
     const n = 3;
@@ -253,8 +253,8 @@ function successCallback(stream) {
     for(let r=0; r<n; r++){
       let sum = 0;
       for(let i=0; i<n; i++){
-        sum += H_inv[r][i]*color[i];
-        ans_sum += H_inv[r][i]*color[i];
+        sum += H_inv[r][i]*receptColor[i];
+        ans_sum += H_inv[r][i]*receptColor[i];
       }
       if(sum>0){
         ans[r] = sum;
@@ -284,7 +284,7 @@ function successCallback(stream) {
     const bit = color_bit[min_id];
     // 色表示
     // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
-    textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[2]) + ", " + color_name[min_id];
+    textArea.innerHTML = String(receptColor[0]) + ", " + String(receptColor[1]) + ", " + String(receptColor[2]) + ", " + color_name[min_id];
   }
 
   // チャネル行列計算
