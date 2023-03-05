@@ -172,8 +172,8 @@ function successCallback(stream) {
             else{
               theta = Math.PI/2;
             }
-            // let tmp_theta = theta*180/Math.PI;
-            if(theta<Math.PI/18){
+            let tmp_theta = theta*180/Math.PI;
+            if(theta<10){
               posLog[0].push([startPoint, endPoint, theta, 0])
               for(let i=1; i<posLog.length; i++){
                 for(let j=0; j<posLog[i].length; j++){
