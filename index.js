@@ -321,7 +321,7 @@ function successCallback(stream) {
     let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
     let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
     let x2 = Math.max(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
-    let new_line = [new Point(x1, y), new Point(x2, y), 0, cnt];
+    let new_line = [new cv.Point(x1, y), new cv.Point(x2, y), 0, cnt];
 
     return [new_line, 1];
   }
