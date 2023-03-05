@@ -217,8 +217,10 @@ function successCallback(stream) {
     // ctx.stroke();          // パスを描画
 
     read_flag = 1;
-    const delay = 1000 / FPS - (Date.now() - begin);
-
+    let delay = 1000 / FPS - (Date.now() - begin);
+    if(delay<0){
+      delay = 0;
+    }
     setTimeout(processVideo, delay);
     // processVideo();
 
