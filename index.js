@@ -70,14 +70,14 @@ function successCallback(stream) {
     // cv.imshow("canvas", videoMatNow);
     // videoMatNow.data.set(cv.matFromImageData(imageData));
 
-    const R_pilot = [200, 15, 2];
-    const G_pilot = [35, 195, 2];
-    const B_pilot = [10, 0, 185];
-    if(read_flag == 0){
-      H_inv = calc_H(R_pilot, G_pilot, B_pilot);
-    }
-    color(videoMatNow, H_inv);
-    // cv.line(videoMatNow, (10,10),(10,11),(0,255,0),1);
+    // const R_pilot = [200, 15, 2];
+    // const G_pilot = [35, 195, 2];
+    // const B_pilot = [10, 0, 185];
+    // if(read_flag == 0){
+    //   H_inv = calc_H(R_pilot, G_pilot, B_pilot);
+    // }
+    // color(videoMatNow, H_inv);
+    // cv.line(videoMatPre, (10,10),(10,11),(0,255,0),1);
 
     // ２値化
     cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
@@ -110,7 +110,7 @@ function successCallback(stream) {
 
         let lines = new cv.Mat();
         // cv.bitwise_not(diffMat, diffMat);
-        cv.Canny(diffMat, diffMat, 30, 300, 3); // エッジ検出
+        cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
 
         // 始点と角度座標var.
         // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
@@ -287,11 +287,11 @@ function successCallback(stream) {
     const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
     const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
 
-    if(distance > 10){
+    if(distance > 30){
       // ２つの線が十分に離れていれば終了
       return [lineA, 0];
     }
-    if(pA[0] > pB[1]+5 || pB[0] > pA[1]+5){
+    if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
       // 重なっていなければ終了
       return [lineA, 0];
     }
