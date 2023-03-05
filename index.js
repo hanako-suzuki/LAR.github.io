@@ -45,6 +45,7 @@ function successCallback(stream) {
   let posLog = []; // 0:x 1:y 2: theta 3:frequency
   const comp_length = 5;
   let colorRed = new cv.Scalar(255, 0, 0);
+  let threshold_size = 5;
 
   let read_flag = 0;
   let H_inv;
@@ -158,45 +159,45 @@ function successCallback(stream) {
         cv.HoughLinesP(diffMat, lines, 1, Math.PI / 180, 2, 0, 0);
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
-            let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
-            let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
-            if(startPoint == endPoint){
-              continue;
-            }
+          let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
+          let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+          if(startPoint.x == endPoint.x & startPoint.y == endPoint.y){
+            continue;
+          }
 
-            // 線分の角度を求める
-            let theta;
-            if(startPoint.x != endPoint.x){
-              theta = Math.atan(Math.abs((startPoint.y-endPoint.y)/(startPoint.x-endPoint.x)));
-            }
-            else{
-              theta = Math.PI/2;
-            }
-            // let tmp_theta = theta*180/Math.PI;
-            if(theta<0.1745){
-              posLog[0].push([startPoint, endPoint, theta, 0])
-              for(let i=1; i<posLog.length; i++){
-                for(let j=0; j<posLog[i].length; j++){
-                  let s_x = posLog[i][j][0].x;
-                  let s_y = posLog[i][j][0].y;
-                  let e_x = posLog[i][j][1].x;
-                  let e_y = posLog[i][j][1].y;
-                  if(s_x-2<startPoint.x & startPoint.x<s_x+2 & s_y-2<startPoint.y & startPoint.y<s_y+2){
-                    if(e_x-2<endPoint.x & endPoint.x<e_x+2 & e_y-2<endPoint.y & endPoint.y<e_y+2){
-                      posLog[i][j][3] += 1;
-                    }
+          // 線分の角度を求める
+          let theta;
+          if(startPoint.x != endPoint.x){
+            theta = Math.atan(Math.abs((startPoint.y-endPoint.y)/(startPoint.x-endPoint.x)));
+          }
+          else{
+            theta = Math.PI/2;
+          }
+          // let tmp_theta = theta*180/Math.PI;
+          if(theta<0.1745){
+            posLog[0].push([startPoint, endPoint, theta, 0])
+            for(let i=1; i<posLog.length; i++){
+              for(let j=0; j<posLog[i].length; j++){
+                let s_x = posLog[i][j][0].x;
+                let s_y = posLog[i][j][0].y;
+                let e_x = posLog[i][j][1].x;
+                let e_y = posLog[i][j][1].y;
+                if(s_x-2<startPoint.x & startPoint.x<s_x+2 & s_y-2<startPoint.y & startPoint.y<s_y+2){
+                  if(e_x-2<endPoint.x & endPoint.x<e_x+2 & e_y-2<endPoint.y & endPoint.y<e_y+2){
+                    posLog[i][j][3] += 1;
                   }
                 }
               }
             }
-            if(posLog.length == comp_length){
-              for(let i=0; i<posLog[comp_length-1].length; i++){
-                if(posLog[comp_length-1][i][3] > comp_length*0.8){
-                  cv.line(videoMatPre, startPoint, endPoint, colorRed);
-                }
-              }
-            }
-            
+          }
+        }
+        if(posLog.length == comp_length){
+          let targetLines = posLog[comp_length-1].concat();
+          targetLines = integlate_lines(targetLines, threshold_size, comp_length);
+          let fuse_lines = fusion(targetLines, (height+width)/2);
+          for(let i=0; i<fuse_lines.length; i++){
+            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+          }
         }
       }
       cv.imshow("canvas", videoMatPre);
@@ -225,6 +226,80 @@ function successCallback(stream) {
     setTimeout(processVideo, delay);
     // processVideo();
 
+  }
+
+  function integlate_lines(bare_lines, threshold_size, comp_length){
+    // 同一の直線と思われる直線を統合する
+
+    let ori_lines = [];
+
+    for(let i=0; i<bare_lines.length; i++){
+      if(bare_lines[i][3] > comp_length*0.8){
+        let integlateFlag = 0;
+        for(let j=0; j<ori_lines.length; j++){
+          // 2直線の始点と終点の差分d1, d2を算出して、それが共に指定距離よりも近くにあるかどうかで、同じ直線かどうかを判断
+          let d1 = Math.sqrt((ori_lines[j][0].x - bare_lines[i][0].x)**2 + (ori_lines[j][0].y - bare_lines[i][0].y)**2);
+          let d2 = Math.sqrt((ori_lines[j][1].x - bare_lines[i][1].x)**2 + (ori_lines[j][1].y - bare_lines[i][1].y)**2);
+          if(d1<threshold_size & d2 <threshold_size){
+            integlateFlag = 1;
+            break
+          }
+        }
+        if(flag == 0){
+          ori_lines.push(bare_lines[i]);
+        }
+      }
+    }
+
+    return ori_lines;
+  }
+
+  function fusion(para_lines, size){
+    // 各直線が他の直線と重なっているかを確認し重なっていれば融合
+
+    let fuse_lines = [];
+    let fused_list = [];
+
+    for(let i; i<para_lines.length; i++){
+      if(fused_list.indexOf(i)>-1){
+        continue;
+      }
+      let new_line = para_lines[i].concat();
+      for(let j=0; j<para_lines.length; j++){
+        if(i != j){
+          let tmp = fusion_lines(new_line, para_lines[j], size);
+          new_line = tmp[0].concat();
+          if(tmp[1]==1){
+            fused_list.push(j);
+          }
+        }
+      }
+      fuse_lines.push(new_line);
+    }
+
+    return fuse_lines;
+  }
+
+  function fusion_lines(lineA, lineB, size){
+    const distance = Math.abs(lineA[0].y - lineB[0].y);
+    const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].y, lineA[1].y)];
+    const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].y, lineB[1].y)];
+
+    if(distance > size/100){
+      // ２つの線が十分に離れていれば終了
+      return [lineA, 0];
+    }
+    if(pA[0] > pB[1]+5 || pB[0] > pA[1]+5){
+      // 重なっていなければ終了
+      return [lineA, 0];
+    }
+
+    let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
+    let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
+    let x2 = Math.max(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
+    let new_line = [new Point(x1, y), new Point(x2, y)];
+
+    return [new_line, 1];
   }
 
   function color(videoMatNow, H_inv){
