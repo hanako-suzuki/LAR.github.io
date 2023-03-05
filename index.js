@@ -30,7 +30,7 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const FPS = 10;
+  const FPS = 30;
 
   /* ここから */
   const width = canvas.width*1.5;
@@ -54,7 +54,7 @@ function successCallback(stream) {
   canvas.height = height;
 
   processVideo();
-  processVideo();
+  // processVideo();
 
   function processVideo() {
     const begin = Date.now();
@@ -112,7 +112,7 @@ function successCallback(stream) {
         posLog.unshift([]); // posLogの一番最初に空の配列を追加
 
         let lines = new cv.Mat();
-        cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
+        cv.Canny(diffMat, diffMat, 0, 255, 3); // エッジ検出
 
         // 始点と角度座標var.
         // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
@@ -217,10 +217,10 @@ function successCallback(stream) {
     // ctx.stroke();          // パスを描画
 
     read_flag = 1;
-    // const delay = 1000 / FPS - (Date.now() - begin);
+    const delay = 1000 / FPS - (Date.now() - begin);
 
-    // setTimeout(processVideo, delay);
-    processVideo();
+    setTimeout(processVideo, delay);
+    // processVideo();
 
   }
 
