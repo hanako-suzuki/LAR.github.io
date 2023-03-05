@@ -35,6 +35,7 @@ function successCallback(stream) {
   /* ここから */
   const width = canvas.width*1.5;
   const height = canvas.height*4;
+  const median = height/2;
 
   let videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
   let videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
@@ -43,6 +44,7 @@ function successCallback(stream) {
 
   let posLog = []; // 0:x 1:y 2: theta 3:frequency
   const comp_length = 5;
+  let color = new cv.Scalar(255, 0, 0);
 
   let read_flag = 0;
   let H_inv;
@@ -111,41 +113,86 @@ function successCallback(stream) {
 
         let lines = new cv.Mat();
         cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
-        cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出
+
+        // 始点と角度座標var.
+        // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
+        // // draw lines
+        // for (let i = 0; i < lines.rows; ++i) {
+        //   let rho = lines.data32F[i * 2];
+        //   let theta = lines.data32F[i * 2 + 1];
+        //   let tmp_theta = theta*180/Math.PI;
+        //   if((tmp_theta<100 & tmp_theta>80) || (tmp_theta>260 & tmp_theta<280)){
+        //     let a = Math.cos(theta);
+        //     let b = Math.sin(theta);
+        //     let x0 = a * rho;
+        //     let y0 = b * rho;
+        //     posLog[0].push([x0, y0, theta, 0])
+        //     for(let i=1; i<posLog.length; i++){
+        //       for(let j=0; j<posLog[i].length; j++){
+        //         let tmp_x = posLog[i][j][0];
+        //         let tmp_y = posLog[i][j][1];
+        //         if(tmp_x-5<x0 & x0<tmp_x+5 & tmp_y-5<y0 & y0 < tmp_y+5){
+        //           posLog[i][j][3] += 1;
+        //         }
+        //       }
+        //     }
+        //     if(posLog.length == comp_length){
+        //       for(let i=0; i<posLog[comp_length-1].length; i++){
+        //         if(posLog[comp_length-1][i][3] > comp_length*0.8){
+        //           let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+        //           let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+        //           cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+        //         }
+        //       }
+              
+        //     }
+        //     // let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+        //     // let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+        //     // cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+        //   }
+        //   // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+        // }
+
+        // 始点と終点座標var.
+        cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
-          let rho = lines.data32F[i * 2];
-          let theta = lines.data32F[i * 2 + 1];
-          let tmp_theta = theta*180/Math.PI;
-          if((tmp_theta<100 & tmp_theta>80) || (tmp_theta>260 & tmp_theta<280)){
-            let a = Math.cos(theta);
-            let b = Math.sin(theta);
-            let x0 = a * rho;
-            let y0 = b * rho;
-            posLog[0].push([x0, y0, theta, 0])
-            for(let i=1; i<posLog.length; i++){
-              for(let j=0; j<posLog[i].length; j++){
-                let tmp_x = posLog[i][j][0];
-                let tmp_y = posLog[i][j][1];
-                if(tmp_x-5<x0 & x0<tmp_x+5 & tmp_y-5<y0 & y0 < tmp_y+5){
-                  posLog[i][j][3] += 1;
+            let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
+            let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+
+            // 線分の角度を求める
+            let theta;
+            if(startPoint.y != endPoint.y){
+              theta = Math.atan(Math.abs(startPoint.x-endPoint.x)/Math.abs(startPoint.y-endPoint.y));
+            }
+            else{
+              theta = Math.PI/2;
+            }
+            let tmp_theta = theta*180/Math.PI;
+            if(tmp_theta<10){
+              posLog[0].push([startPoint, endPoint, 0])
+              for(let i=1; i<posLog.length; i++){
+                for(let j=0; j<posLog[i].length; j++){
+                  let s_x = posLog[i][j][0].x;
+                  let s_y = posLog[i][j][0].y;
+                  let e_x = posLog[i][j][1].x;
+                  let e_y = posLog[i][j][1].y;
+                  if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
+                    if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
+                      posLog[i][j][2] += 1;
+                    }
+                  }
                 }
               }
             }
             if(posLog.length == comp_length){
               for(let i=0; i<posLog[comp_length-1].length; i++){
-                if(posLog[comp_length-1][i][3] > comp_length*0.8){
-                  let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-                  let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-                  cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+                if(posLog[comp_length-1][i][2] > comp_length*0.8){
+                  cv.line(videoMatPre, startPoint, endPoint, color);
                 }
               }
             }
-            // let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-            // let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-            // cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
-          }
-          // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+            
         }
       }
       cv.imshow("canvas", videoMatPre);
