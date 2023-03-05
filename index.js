@@ -287,7 +287,7 @@ function successCallback(stream) {
     const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
     const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
 
-    if(distance > size/100){
+    if(distance > 10){
       // ２つの線が十分に離れていれば終了
       return [lineA, 0];
     }
