@@ -191,14 +191,14 @@ function successCallback(stream) {
             if(posLog.length == comp_length){
               for(let i=0; i<posLog[comp_length-1].length; i++){
                 if(posLog[comp_length-1][i][2] > comp_length*0.8){
-                  cv.line(diffMat, startPoint, endPoint, colorRed);
+                  cv.line(videoMatPre, startPoint, endPoint, colorRed);
                 }
               }
             }
             
         }
       }
-      cv.imshow("canvas", diffMat);
+      cv.imshow("canvas", videoMatPre);
       // diffMat.delete();
       // lines.delete();
       // blackAndWhiteMatNow.delete();
