@@ -158,6 +158,7 @@ function successCallback(stream) {
           let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
           let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
           if(startPoint.x == endPoint.x & startPoint.y == endPoint.y){
+            // 点は除去
             continue;
           }
 
@@ -236,7 +237,7 @@ function successCallback(stream) {
     let ori_lines = [];
 
     for(let i=0; i<bare_lines.length; i++){
-      if(bare_lines[i][3] > comp_length*0.8){
+      if(bare_lines[i][3] > comp_length*0.6){
         let integlateFlag = 0;
         for(let j=0; j<ori_lines.length; j++){
           // 2直線の始点と終点の差分d1, d2を算出して、それが共に指定距離よりも近くにあるかどうかで、同じ直線かどうかを判断
