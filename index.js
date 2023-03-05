@@ -112,7 +112,7 @@ function successCallback(stream) {
         posLog.unshift([]); // posLogの一番最初に空の配列を追加
 
         let lines = new cv.Mat();
-        cv.Canny(diffMat, diffMat, 150, 300, 3); // エッジ検出
+        cv.Canny(diffMat, diffMat, 30, 300, 3); // エッジ検出
 
         // 始点と角度座標var.
         // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
