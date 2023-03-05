@@ -159,6 +159,9 @@ function successCallback(stream) {
         for (let i = 0; i < lines.rows; ++i) {
             let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
             let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+            if(startPoint == endPoint){
+              continue;
+            }
 
             // 線分の角度を求める
             let theta;
