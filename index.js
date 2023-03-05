@@ -106,10 +106,6 @@ function successCallback(stream) {
 
       // 線分検出 Hough
       if(diffMat.width!=NaN){
-
-        if (posLog.length >= comp_length){ // comp_lengthの長さ分だけ前のものを保持して比較
-          posLog.pop(); // posLogの一番最後を削除
-        }
         posLog.unshift([]); // posLogの一番最初に空の配列を追加
 
         let lines = new cv.Mat();
@@ -193,11 +189,15 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          targetLines = integlate_lines(targetLines, threshold_size, comp_length);
-          let fuse_lines = fusion(targetLines, (height+width)/2);
-          for(let i=0; i<fuse_lines.length; i++){
-            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+          // targetLines = integlate_lines(targetLines, threshold_size, comp_length);
+          // let fuse_lines = fusion(targetLines, (height+width)/2);
+          // for(let i=0; i<fuse_lines.length; i++){
+          //   cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+          // }
+          for(let i=0; i<targetLines.length; i++){
+            cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
           }
+          posLog.pop(); // posLogの一番最後を削除
         }
       }
       cv.imshow("canvas", videoMatPre);
@@ -245,7 +245,7 @@ function successCallback(stream) {
             break
           }
         }
-        if(flag == 0){
+        if(integlateFlag == 0){
           ori_lines.push(bare_lines[i]);
         }
       }
