@@ -162,8 +162,8 @@ function successCallback(stream) {
 
             // 線分の角度を求める
             let theta;
-            if(startPoint.y != endPoint.y){
-              theta = Math.atan(Math.abs(startPoint.x-endPoint.x)/Math.abs(startPoint.y-endPoint.y));
+            if(startPoint.x != endPoint.x){
+              theta = Math.atan(Math.abs((startPoint.y-endPoint.y)/(startPoint.x-endPoint.x)));
             }
             else{
               theta = Math.PI/2;
