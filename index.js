@@ -216,12 +216,12 @@ function successCallback(stream) {
     // ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
     // ctx.stroke();          // パスを描画
 
-    const delay = 1000 / FPS - (Date.now() - begin);
-
-    setTimeout(processVideo, delay);
-    // processVideo();
-
     read_flag = 1;
+    // const delay = 1000 / FPS - (Date.now() - begin);
+
+    // setTimeout(processVideo, delay);
+    processVideo();
+
   }
 
   function color(videoMatNow, H_inv){
