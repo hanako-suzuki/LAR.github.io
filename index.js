@@ -190,16 +190,16 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          targetLines = integlate_lines(targetLines, threshold_size, comp_length);
-          let fuse_lines = fusion(targetLines, (height+width)/2);
-          for(let i=0; i<fuse_lines.length; i++){
-            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
-          }
-          // for(let i=0; i<targetLines.length; i++){
-          //   if(targetLines[i][3] > comp_length*0.8){
-          //     cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
-          //   }
+          // targetLines = integlate_lines(targetLines, threshold_size, comp_length);
+          // let fuse_lines = fusion(targetLines, (height+width)/2);
+          // for(let i=0; i<fuse_lines.length; i++){
+          //   cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
           // }
+          for(let i=0; i<targetLines.length; i++){
+            if(targetLines[i][3] > comp_length*0.8){
+              cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
+            }
+          }
           posLog.pop(); // posLogの一番最後を削除
         }
       }
