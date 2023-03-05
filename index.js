@@ -112,7 +112,8 @@ function successCallback(stream) {
         posLog.unshift([]); // posLogの一番最初に空の配列を追加
 
         let lines = new cv.Mat();
-        cv.Canny(diffMat, diffMat, 30, 300, 3); // エッジ検出
+        cv.bitwise_not(diffMat, diffMat);
+        // cv.Canny(diffMat, diffMat, 30, 300, 3); // エッジ検出
 
         // 始点と角度座標var.
         // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
@@ -173,7 +174,7 @@ function successCallback(stream) {
             }
             // let tmp_theta = theta*180/Math.PI;
             if(theta<Math.PI/18){
-              posLog[0].push([startPoint, endPoint, 0])
+              posLog[0].push([startPoint, endPoint, theta, 0])
               for(let i=1; i<posLog.length; i++){
                 for(let j=0; j<posLog[i].length; j++){
                   let s_x = posLog[i][j][0].x;
@@ -182,7 +183,7 @@ function successCallback(stream) {
                   let e_y = posLog[i][j][1].y;
                   if(s_x-2<startPoint.x & startPoint.x<s_x+2 & s_y-2<startPoint.y & startPoint.y<s_y+2){
                     if(e_x-2<endPoint.x & endPoint.x<e_x+2 & e_y-2<endPoint.y & endPoint.y<e_y+2){
-                      posLog[i][j][2] += 1;
+                      posLog[i][j][3] += 1;
                     }
                   }
                 }
@@ -190,7 +191,7 @@ function successCallback(stream) {
             }
             if(posLog.length == comp_length){
               for(let i=0; i<posLog[comp_length-1].length; i++){
-                if(posLog[comp_length-1][i][2] > comp_length*0.8){
+                if(posLog[comp_length-1][i][3] > comp_length*0.8){
                   cv.line(videoMatPre, startPoint, endPoint, colorRed);
                 }
               }
