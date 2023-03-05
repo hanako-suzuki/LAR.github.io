@@ -159,6 +159,7 @@ function successCallback(stream) {
         for (let i = 0; i < lines.rows; ++i) {
           let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
           let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+
           if(startPoint.x == endPoint.x & startPoint.y == endPoint.y){
             // 点は除去
             continue;
@@ -174,20 +175,35 @@ function successCallback(stream) {
           }
           // let tmp_theta = theta*180/Math.PI;
           if(theta<0.1745){
-            posLog[0].push([startPoint, endPoint, theta, 0])
             for(let i=1; i<posLog.length; i++){
               for(let j=0; j<posLog[i].length; j++){
                 let s_x = posLog[i][j][0].x;
                 let s_y = posLog[i][j][0].y;
                 let e_x = posLog[i][j][1].x;
                 let e_y = posLog[i][j][1].y;
-                if(s_x-2<startPoint.x & startPoint.x<s_x+2 & s_y-2<startPoint.y & startPoint.y<s_y+2){
-                  if(e_x-2<endPoint.x & endPoint.x<e_x+2 & e_y-2<endPoint.y & endPoint.y<e_y+2){
+                // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
+                //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
+                //     posLog[i][j][3] += 1;
+                //   }
+                // }
+                if(s_y-5<startPoint.y & startPoint.y<e_y+5){
+                  if((s_x-5 < startPoint.x || s_x-5 < endPoint.x) & (startPoint.x < e_x+5 || endPoint.x<e_x+5)){
                     posLog[i][j][3] += 1;
                   }
                 }
+                // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
+                //   // y座標が同じくらいなら線を結合
+                //   let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+                //   let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+                //   let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
+                //   startPoint.x = new_x0;
+                //   startPoint.y = new_y;
+                //   endPoint.x = new_x1;
+                //   endPoint.y = new_y;
+                // }
               }
             }
+            posLog[0].push([startPoint, endPoint, theta, 0])
           }
         }
         if(posLog.length == comp_length){
@@ -195,7 +211,9 @@ function successCallback(stream) {
           let fuse_lines = fusion(targetLines);
           // targetLines = integlate_lines(targetLines, threshold_size, comp_length);
           for(let i=0; i<fuse_lines.length; i++){
-            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+            if(fuse_lines[i][3] > comp_length * 0.8){
+              cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+            }
           }
           // for(let i=0; i<targetLines.length; i++){
           //   if(targetLines[i][3] > comp_length*0.8){
@@ -287,12 +305,13 @@ function successCallback(stream) {
 
   function fusion_lines(lineA, lineB){
     const distance = Math.abs(lineA[0].y - lineB[0].y);
-    const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
-    const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
+    // const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
+    // const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
+    const cnt = Math.max(LineA[3], LineB[3]);
 
     if(distance > 30){
       // ２つの線が十分に離れていれば終了
-      return [lineA, 0];
+      return [lineA, 0, 0];
     }
     // if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
     //   // 重なっていなければ終了
@@ -302,7 +321,7 @@ function successCallback(stream) {
     let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
     let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
     let x2 = Math.max(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
-    let new_line = [new Point(x1, y), new Point(x2, y)];
+    let new_line = [new Point(x1, y), new Point(x2, y), 0, cnt];
 
     return [new_line, 1];
   }
