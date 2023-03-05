@@ -283,7 +283,7 @@ function successCallback(stream) {
     let fuse_lines = [];
     let fused_list = [];
 
-    for(let i; i<para_lines.length; i++){
+    for(let i=0; i<para_lines.length; i++){
       if(fused_list.indexOf(i)>-1){
         continue;
       }
