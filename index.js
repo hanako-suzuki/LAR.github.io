@@ -168,8 +168,8 @@ function successCallback(stream) {
             else{
               theta = Math.PI/2;
             }
-            let tmp_theta = theta*180/Math.PI;
-            if(tmp_theta<10){
+            // let tmp_theta = theta*180/Math.PI;
+            if(theta<Math.PI/18){
               posLog[0].push([startPoint, endPoint, 0])
               for(let i=1; i<posLog.length; i++){
                 for(let j=0; j<posLog[i].length; j++){
@@ -177,8 +177,8 @@ function successCallback(stream) {
                   let s_y = posLog[i][j][0].y;
                   let e_x = posLog[i][j][1].x;
                   let e_y = posLog[i][j][1].y;
-                  if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
-                    if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
+                  if(s_x-2<startPoint.x & startPoint.x<s_x+2 & s_y-2<startPoint.y & startPoint.y<s_y+2){
+                    if(e_x-2<endPoint.x & endPoint.x<e_x+2 & e_y-2<endPoint.y & endPoint.y<e_y+2){
                       posLog[i][j][2] += 1;
                     }
                   }
