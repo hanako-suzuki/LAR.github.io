@@ -108,16 +108,17 @@ function successCallback(stream) {
       if(diffMat.width!=NaN){
         posLog.unshift([]); // posLogの一番最初に空の配列を追加
 
-        let lines = new cv.Mat();
+        let y_position = [];
         // cv.bitwise_not(diffMat, diffMat);
         cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
 
         // 始点と角度座標var.
-        // cv.HoughLines(diffMat, lines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
+        // let straightLines = new cv.Mat();
+        // cv.HoughLines(diffMat, straightLines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
         // // draw lines
-        // for (let i = 0; i < lines.rows; ++i) {
-        //   let rho = lines.data32F[i * 2];
-        //   let theta = lines.data32F[i * 2 + 1];
+        // for (let i = 0; i < straightLines.rows; ++i) {
+        //   let rho = straightLines.data32F[i * 2];
+        //   let theta = straightLines.data32F[i * 2 + 1];
         //   let tmp_theta = theta*180/Math.PI;
         //   if((tmp_theta<100 & tmp_theta>80) || (tmp_theta>260 & tmp_theta<280)){
         //     let a = Math.cos(theta);
@@ -152,6 +153,7 @@ function successCallback(stream) {
         // }
 
         // 始点と終点座標var.
+        let lines = new cv.Mat();
         cv.HoughLinesP(diffMat, lines, 1, Math.PI / 180, 2, 0, 0);
         // draw lines
         for (let i = 0; i < lines.rows; ++i) {
@@ -190,16 +192,16 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
+          let fuse_lines = fusion(targetLines);
           // targetLines = integlate_lines(targetLines, threshold_size, comp_length);
-          // let fuse_lines = fusion(targetLines, (height+width)/2);
-          // for(let i=0; i<fuse_lines.length; i++){
-          //   cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
-          // }
-          for(let i=0; i<targetLines.length; i++){
-            if(targetLines[i][3] > comp_length*0.8){
-              cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
-            }
+          for(let i=0; i<fuse_lines.length; i++){
+            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
           }
+          // for(let i=0; i<targetLines.length; i++){
+          //   if(targetLines[i][3] > comp_length*0.8){
+          //     cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
+          //   }
+          // }
           posLog.pop(); // posLogの一番最後を削除
         }
       }
@@ -257,7 +259,7 @@ function successCallback(stream) {
     return ori_lines;
   }
 
-  function fusion(para_lines, size){
+  function fusion(para_lines){
     // 各直線が他の直線と重なっているかを確認し重なっていれば融合
 
     let fuse_lines = [];
@@ -270,7 +272,7 @@ function successCallback(stream) {
       let new_line = para_lines[i].concat();
       for(let j=0; j<para_lines.length; j++){
         if(i != j){
-          let tmp = fusion_lines(new_line, para_lines[j], size);
+          let tmp = fusion_lines(new_line, para_lines[j]);
           new_line = tmp[0].concat();
           if(tmp[1]==1){
             fused_list.push(j);
@@ -283,7 +285,7 @@ function successCallback(stream) {
     return fuse_lines;
   }
 
-  function fusion_lines(lineA, lineB, size){
+  function fusion_lines(lineA, lineB){
     const distance = Math.abs(lineA[0].y - lineB[0].y);
     const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
     const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
@@ -292,10 +294,10 @@ function successCallback(stream) {
       // ２つの線が十分に離れていれば終了
       return [lineA, 0];
     }
-    if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
-      // 重なっていなければ終了
-      return [lineA, 0];
-    }
+    // if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
+    //   // 重なっていなければ終了
+    //   return [lineA, 0];
+    // }
 
     let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
     let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
