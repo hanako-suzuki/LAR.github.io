@@ -213,6 +213,7 @@ function successCallback(stream) {
           for(let i=0; i<fuse_lines.length; i++){
             if(fuse_lines[i][3] > comp_length * 0.8){
               cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+              // データ送信箇所読み取り処理
             }
           }
           // for(let i=0; i<targetLines.length; i++){
@@ -297,10 +298,27 @@ function successCallback(stream) {
           }
         }
       }
-      fuse_lines.push(new_line);
+      fuse_lines.push([new_line,Math.abs(new_line[0].x-new_line[1].x),0]);
     }
 
-    return fuse_lines;
+    let return_lines = [];
+    for(let i=0; i<fuse_lines.length; i++){
+      for(let j=0; j<fuse_lines.length;j++){
+        if(i!=j){
+          if(fuse_lines[i][1]-5<fuse_lines[j][1] & fuse_lines[j][1]<fuse_lines[i][1]+5){
+            fuse_lines[i][2] += 1;
+          }
+        }
+      }
+    }
+
+    for(let i=0; i<fuse_lines.length; i++){
+      if(fuse_lines[i][2]>0){
+        return_lines.push(fuse_lines[i][0]);
+      }
+    }
+
+    return return_lines;
   }
 
   function fusion_lines(lineA, lineB){
@@ -390,6 +408,7 @@ function successCallback(stream) {
     // 色表示
     // textArea.innerHTML = String(color[0]) + ", " + String(color[1]) + ", " + String(color[1]) + " " + color_name[min_id];
     textArea.innerHTML = String(receptColor[0]) + ", " + String(receptColor[1]) + ", " + String(receptColor[2]) + ", " + color_name[min_id];
+    return color_name;
   }
 
   // チャネル行列計算
