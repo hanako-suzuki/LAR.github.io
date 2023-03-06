@@ -210,7 +210,7 @@ function successCallback(stream) {
           let targetLines = posLog[comp_length-1].concat();
           let fuse_lines = fusion(targetLines);
           fuse_lines = fusion(fuse_lines);
-          fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
+          fuse_lines = fusion(fuse_lines);
           fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<fuse_lines.length; i++){
             if(fuse_lines[i][3] > comp_length * 0.8){
@@ -278,7 +278,24 @@ function successCallback(stream) {
       }
     }
 
-    return ori_lines;
+    let return_lines = [];
+    for(let i=0; i<ori_lines.length; i++){
+      for(let j=0; j<ori_lines.length;j++){
+        if(i!=j){
+          if(ori_lines[i][1]-5<ori_lines[j][1] & ori_lines[j][1]<ori_lines[i][1]+5){
+            ori_lines[i][2] += 1;
+          }
+        }
+      }
+    }
+
+    for(let i=0; i<ori_lines.length; i++){
+      if(ori_lines[i][2]>0){
+        return_lines.push(ori_lines[i][0]);
+      }
+    }
+
+    return return_lines;
   }
 
   function fusion(para_lines){
@@ -304,24 +321,24 @@ function successCallback(stream) {
       fuse_lines.push([new_line,Math.abs(new_line[0].x-new_line[1].x),0]);
     }
 
-    let return_lines = [];
-    for(let i=0; i<fuse_lines.length; i++){
-      for(let j=0; j<fuse_lines.length;j++){
-        if(i!=j){
-          if(fuse_lines[i][1]-5<fuse_lines[j][1] & fuse_lines[j][1]<fuse_lines[i][1]+5){
-            fuse_lines[i][2] += 1;
-          }
-        }
-      }
-    }
+    // let return_lines = [];
+    // for(let i=0; i<fuse_lines.length; i++){
+    //   for(let j=0; j<fuse_lines.length;j++){
+    //     if(i!=j){
+    //       if(fuse_lines[i][1]-5<fuse_lines[j][1] & fuse_lines[j][1]<fuse_lines[i][1]+5){
+    //         fuse_lines[i][2] += 1;
+    //       }
+    //     }
+    //   }
+    // }
 
-    for(let i=0; i<fuse_lines.length; i++){
-      if(fuse_lines[i][2]>0){
-        return_lines.push(fuse_lines[i][0]);
-      }
-    }
+    // for(let i=0; i<fuse_lines.length; i++){
+    //   if(fuse_lines[i][2]>0){
+    //     return_lines.push(fuse_lines[i][0]);
+    //   }
+    // }
 
-    return return_lines;
+    return fuse_lines;
   }
 
   function fusion_lines(lineA, lineB){
