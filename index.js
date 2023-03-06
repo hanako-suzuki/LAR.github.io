@@ -211,6 +211,7 @@ function successCallback(stream) {
           let fuse_lines = fusion(targetLines);
           fuse_lines = fusion(fuse_lines);
           fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
+          fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<fuse_lines.length; i++){
             if(fuse_lines[i][3] > comp_length * 0.8){
               cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
