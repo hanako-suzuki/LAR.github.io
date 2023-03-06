@@ -214,6 +214,7 @@ function successCallback(stream) {
             if(fuse_lines[i][3] > comp_length * 0.8){
               cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
               // データ送信箇所読み取り処理
+
             }
           }
           // for(let i=0; i<targetLines.length; i++){
@@ -323,18 +324,18 @@ function successCallback(stream) {
 
   function fusion_lines(lineA, lineB){
     const distance = Math.abs(lineA[0].y - lineB[0].y);
-    // const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
-    // const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
+    const pA = [Math.min(lineA[0].x, lineA[1].x), Math.max(lineA[0].x, lineA[1].x)];
+    const pB = [Math.min(lineB[0].x, lineB[1].x), Math.max(lineB[0].x, lineB[1].x)];
     const cnt = Math.max(lineA[3], lineB[3]);
 
     if(distance > 5){
       // ２つの線が十分に離れていれば終了
-      return [lineA, 0, 0];
+      return [lineA, 0];
     }
-    // if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
-    //   // 重なっていなければ終了
-    //   return [lineA, 0];
-    // }
+    if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
+      // 重なっていなければ終了
+      return [lineA, 0];
+    }
 
     let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
     let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
