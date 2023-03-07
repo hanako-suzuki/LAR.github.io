@@ -93,7 +93,11 @@ function successCallback(stream) {
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
       let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
-      cv.absdiff(videoMatNow, videoMatPre, diffMat2);
+      let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
+      let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
+      cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
+      cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
+      cv.absdiff(tmp_now, tmp_pre, diffMat2);
       let R_value=0;
       let G_value=0;
       let B_value=0;
