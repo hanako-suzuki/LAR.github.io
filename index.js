@@ -106,6 +106,7 @@ function successCallback(stream) {
         }
       }
       textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
+      cv.imshow("canvas", diffMat);
       cv.cvtColor(diffMat, diffMat, cv.COLOR_RGB2GRAY);
       // cv.imshow("canvas", diffMat);
 
@@ -224,7 +225,7 @@ function successCallback(stream) {
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
           let fuse_lines = fusion(targetLines);
-          fuse_lines = fusion(fuse_lines);
+          // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<fuse_lines.length; i++){
@@ -242,7 +243,7 @@ function successCallback(stream) {
           posLog.pop(); // posLogの一番最後を削除
         }
       }
-      cv.imshow("canvas", videoMatPre);
+      // cv.imshow("canvas", videoMatPre);
       // diffMat.delete();
       // lines.delete();
       // blackAndWhiteMatNow.delete();
@@ -366,7 +367,7 @@ function successCallback(stream) {
       // ２つの線が十分に離れていれば終了
       return [lineA, 0];
     }
-    if(pA[0] > pB[1]+15 || pB[0] > pA[1]+15){
+    if(pA[0] > pB[1]+30 || pB[0] > pA[1]+30){
       // 重なっていなければ終了
       return [lineA, 0];
     }
