@@ -33,8 +33,8 @@ function successCallback(stream) {
   const FPS = 30;
 
   /* ここから */
-  const width = video.clientWidth;
-  const height = video.clientHeight;
+  const width = video.clientWidth*1.5;
+  const height = video.clientHeight*4;
   const median = height/2;
 
   let videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
