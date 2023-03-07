@@ -91,7 +91,20 @@ function successCallback(stream) {
     if(read_flag != 0){
       // 差分取得
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-      cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      cv.absdiff(videoMatNow, videoMatPre, diffMat);
+      let R_value=0;
+      let G_value=0;
+      let B_value=0;
+      for(let i=50; i<52;i++){
+        for(let j=50; j<52;j++){
+          let data = diffMat.ucharPtr(i,j);
+          R_value += data[0]/4;
+          G_value += data[1]/4;
+          B_value += data[2]/4;
+        }
+      }
+      textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
       // cv.imshow("canvas", diffMat);
 
       // 矩形検出
@@ -208,22 +221,22 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          // let fuse_lines = fusion(targetLines);
-          // fuse_lines = fusion(fuse_lines);
+          let fuse_lines = fusion(targetLines);
+          fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
-          // for(let i=0; i<fuse_lines.length; i++){
-          //   if(fuse_lines[i][3] > comp_length * 0.8){
-          //     cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
-          //     // データ送信箇所読み取り処理
+          for(let i=0; i<fuse_lines.length; i++){
+            if(fuse_lines[i][3] > comp_length * 0.8){
+              cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+              // データ送信箇所読み取り処理
 
-          //   }
-          // }
-          for(let i=0; i<targetLines.length; i++){
-            if(targetLines[i][3] > comp_length*0.8){
-              cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
             }
           }
+          // for(let i=0; i<targetLines.length; i++){
+          //   if(targetLines[i][3] > comp_length*0.8){
+          //     cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
+          //   }
+          // }
           posLog.pop(); // posLogの一番最後を削除
         }
       }
