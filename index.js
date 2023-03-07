@@ -92,21 +92,21 @@ function successCallback(stream) {
       // 差分取得
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      // let diffMat = new cv.Mat(height, width, cv.CV_8UC4);
-      // cv.absdiff(videoMatNow, videoMatPre, diffMat);
-      // let R_value=0;
-      // let G_value=0;
-      // let B_value=0;
-      // for(let i=50; i<52;i++){
-      //   for(let j=50; j<52;j++){
-      //     let data = diffMat.ucharPtr(i,j);
-      //     R_value += data[0]/4;
-      //     G_value += data[1]/4;
-      //     B_value += data[2]/4;
-      //   }
-      // }
-      // textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
-      cv.imshow("canvas", diffMat);
+      let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
+      cv.absdiff(videoMatNow, videoMatPre, diffMat2);
+      let R_value=0;
+      let G_value=0;
+      let B_value=0;
+      for(let i=50; i<52;i++){
+        for(let j=50; j<52;j++){
+          let data = diffMat2.ucharPtr(i,j);
+          R_value += data[0]/4;
+          G_value += data[1]/4;
+          B_value += data[2]/4;
+        }
+      }
+      textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
+      cv.imshow("canvas", diffMat2);
       // cv.cvtColor(diffMat, diffMat, cv.COLOR_RGB2GRAY);
       // cv.imshow("canvas", diffMat);
 
