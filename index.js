@@ -91,20 +91,20 @@ function successCallback(stream) {
     if(read_flag != 0){
       // 差分取得
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-      // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      cv.absdiff(videoMatNow, videoMatPre, diffMat);
-      let R_value=0;
-      let G_value=0;
-      let B_value=0;
-      for(let i=50; i<52;i++){
-        for(let j=50; j<52;j++){
-          let data = diffMat.ucharPtr(i,j);
-          R_value += data[0]/4;
-          G_value += data[1]/4;
-          B_value += data[2]/4;
-        }
-      }
-      textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
+      cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      // cv.absdiff(videoMatNow, videoMatPre, diffMat);
+      // let R_value=0;
+      // let G_value=0;
+      // let B_value=0;
+      // for(let i=50; i<52;i++){
+      //   for(let j=50; j<52;j++){
+      //     let data = diffMat.ucharPtr(i,j);
+      //     R_value += data[0]/4;
+      //     G_value += data[1]/4;
+      //     B_value += data[2]/4;
+      //   }
+      // }
+      // textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
       // cv.imshow("canvas", diffMat);
 
       // 矩形検出
