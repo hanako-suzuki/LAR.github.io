@@ -30,7 +30,7 @@ promise.then(successCallback)
 
 function successCallback(stream) {
   video.srcObject = stream;
-  const FPS = 30;
+  const FPS = 1;
 
   /* ここから */
   const width = video.clientWidth*1.5;
