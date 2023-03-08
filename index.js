@@ -391,6 +391,7 @@ function successCallback(stream) {
   function check_diff_color(diffMatColor, lines){
     let lines_flag = [];
     let new_lines = [];
+    let colorData = [];
     for(let cnt=0; cnt<lines.length; cnt++){
       lines_flag.push(0);
       let target = lines[cnt];
@@ -401,7 +402,6 @@ function successCallback(stream) {
       let R_value = 0.0;
       let G_value = 0.0;
       let B_value = 0.0;
-      let colorData = [];
       for(let i=px[0]; i<=px[1]; i++){
         for(let j=py-2; j<=py+2; j++){
           let data = videoMatNow.ucharPtr(j,i);
