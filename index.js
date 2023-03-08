@@ -260,7 +260,7 @@ function successCallback(stream) {
 
     videoMatPre = videoMatNow.clone();
     // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
-    // cv.imshow("canvas", videoMatPre);
+    cv.imshow("canvas", videoMatPre);
 
     // キャンバス上に線を描画
     // ctx.beginPath();       // 新しいパスを開始
