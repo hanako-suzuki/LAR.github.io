@@ -89,28 +89,30 @@ function successCallback(stream) {
 
   
     if(read_flag != 0){
-      // 差分取得
+      // 差分取得 グレースケール
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      // 差分取得　カラー
       let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
       let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
       let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
       cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
       cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
       cv.absdiff(tmp_now, tmp_pre, diffMat2);
-      let R_value=0;
-      let G_value=0;
-      let B_value=0;
-      for(let i=50; i<52;i++){
-        for(let j=50; j<52;j++){
-          let data = diffMat2.ucharPtr(i,j);
-          R_value += data[0]/4;
-          G_value += data[1]/4;
-          B_value += data[2]/4;
-        }
-      }
-      textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
-      cv.imshow("canvas", diffMat2);
+      // let R_value=0;
+      // let G_value=0;
+      // let B_value=0;
+      // for(let i=50; i<52;i++){
+      //   for(let j=50; j<52;j++){
+      //     let data = diffMat2.ucharPtr(i,j);
+      //     R_value += data[0]/4;
+      //     G_value += data[1]/4;
+      //     B_value += data[2]/4;
+      //   }
+      // }
+      // textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
+      // cv.imshow("canvas", diffMat2);
+
       // cv.cvtColor(diffMat, diffMat, cv.COLOR_RGB2GRAY);
       // cv.imshow("canvas", diffMat);
 
@@ -228,7 +230,8 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          let fuse_lines = fusion(targetLines);
+          let fuse_lines = fusion(targetLines); // 線の結合
+          let new_line = check_diff_color(diffMat2, fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
@@ -382,6 +385,51 @@ function successCallback(stream) {
     let new_line = [new cv.Point(x1, y), new cv.Point(x2, y), 0, cnt];
 
     return [new_line, 1];
+  }
+
+  // カラー差分から取りたい線だけ出す
+  function check_diff_color(diffMatColor, lines){
+    let lines_flag = [];
+    let new_lines = [];
+    for(let cnt=0; cnt<lines.length; cnt++){
+      lines_flag.push(0);
+      let target = lines[cnt];
+      const px = [Math.min(target[0].x, target[1].x), Math.max(target[0].x, target[1].x)];
+      const py = target[0].y;
+
+      // 線状の平均輝度値を取得
+      let R_value = 0.0;
+      let G_value = 0.0;
+      let B_value = 0.0;
+      let colorData = [];
+      for(let i=px[0]; i<=px[1]; i++){
+        for(let j=py-2; j<=py+2; j++){
+          let data = videoMatNow.ucharPtr(j,i);
+          R_value += data[0];
+          G_value += data[1];
+          B_value += data[2];
+        }
+        R_value /= (px[1]-px[0]+1);
+        G_value /= (px[1]-px[0]+1);
+        B_value /= (px[1]-px[0]+1);
+        colorData.push([R_value, G_value, B_value, 0]);
+      }
+    }
+    for(let i=0; i<colorData.length; i++){
+      if(colorData[i][0]>150 & colorData[i][1]>150 & colorData[i][2]<50){
+        colorData[i][3] = 1;
+        lines_flag[cnt] = 1;
+      }
+    }
+
+    for(let i=lines_flag; i<lines_flag.length; i--){
+      if(lines_flag[i]== 1){
+        new_lines.push(lines[i]);
+      }
+    }
+
+    return new_lines;
+    
   }
 
   function color(videoMatNow, H_inv){
