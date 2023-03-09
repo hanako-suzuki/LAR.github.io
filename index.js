@@ -220,6 +220,8 @@ function successCallback(stream) {
                     startPoint.y = new_y;
                     endPoint.x = new_x1;
                     endPoint.y = new_y;
+                    posLog[i][j][0] = new cv.Point(new_x0, new_y);
+                    posLog[i][j][1] = new cv.Point(new_x1, new_y);
                   }
                 }
                 // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
@@ -245,7 +247,7 @@ function successCallback(stream) {
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<new_lines.length; i++){
-            if(new_lines[i][3] > comp_length * 0.8){
+            if(new_lines[i][3] > comp_length * 0.6){
               cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
               // データ送信箇所読み取り処理
 
