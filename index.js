@@ -240,9 +240,9 @@ function successCallback(stream) {
           }
         }
         if(posLog.length == comp_length){
-          let targetLines = posLog[comp_length-1].concat();
+          let new_lines = posLog[comp_length-1].concat();
           // let fuse_lines = fusion(targetLines); // 線の結合
-          let new_lines = check_diff_color(diffMat2, targetLines);
+          // new_lines = check_diff_color(diffMat2, targetLines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
