@@ -230,14 +230,14 @@ function successCallback(stream) {
         }
         if(posLog.length == comp_length){
           let targetLines = posLog[comp_length-1].concat();
-          let fuse_lines = fusion(targetLines); // 線の結合
-          let new_line = check_diff_color(diffMat2, fuse_lines);
+          // let fuse_lines = fusion(targetLines); // 線の結合
+          let new_line = check_diff_color(diffMat2, target_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
-          for(let i=0; i<fuse_lines.length; i++){
-            if(fuse_lines[i][3] > comp_length * 0.8){
-              cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+          for(let i=0; i<new_lines.length; i++){
+            if(new_lines[i][3] > comp_length * 0.8){
+              cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
               // データ送信箇所読み取り処理
 
             }
