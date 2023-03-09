@@ -199,18 +199,27 @@ function successCallback(stream) {
           if(theta<0.1745){
             for(let i=1; i<posLog.length; i++){
               for(let j=0; j<posLog[i].length; j++){
-                let s_x = posLog[i][j][0].x;
+                let s_x = Math.min(posLog[i][j][0].x,posLog[i][j][1].x);
                 let s_y = posLog[i][j][0].y;
-                let e_x = posLog[i][j][1].x;
+                let e_x = Math.max(posLog[i][j][0].x,posLog[i][j][1].x);
                 let e_y = posLog[i][j][1].y;
                 // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
                 //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
                 //     posLog[i][j][3] += 1;
                 //   }
                 // }
+                let min_x = Math.min(startPoint.x, endPoint.x);
+                let max_x = Math.max(startPoint.x, endPoint.x);
                 if(s_y-5<startPoint.y & startPoint.y<e_y+5){
-                  if((s_x-5 < startPoint.x || s_x-5 < endPoint.x) & (startPoint.x < e_x+5 || endPoint.x<e_x+5)){
+                  if(e_x+15<min_x || max_x+15<s_x){
                     posLog[i][j][3] += 1;
+                    let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+                    let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+                    let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
+                    startPoint.x = new_x0;
+                    startPoint.y = new_y;
+                    endPoint.x = new_x1;
+                    endPoint.y = new_y;
                   }
                 }
                 // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
