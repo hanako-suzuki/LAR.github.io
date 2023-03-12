@@ -91,7 +91,7 @@ function successCallback(stream) {
     if(read_flag != 0){
       // 差分取得 グレースケール
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-      cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      // cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
       // 差分取得　カラー
       let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
       let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
@@ -99,6 +99,20 @@ function successCallback(stream) {
       cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
       cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
       cv.absdiff(tmp_now, tmp_pre, diffMat2);
+
+      // 青の値が大きければ差分を消す
+      for(let i=0; i<height;i++){
+        for(let j=0; j<width; j++){
+          let data = diffMat2.ucharPtr(i,j);
+          if(data[2]>50){
+            diffMat2.ucharPtr(i,j)[0] = 0;
+            diffMat2.ucharPtr(i,j)[1] = 0;
+            diffMat2.ucharPtr(i,j)[2] = 0;
+          }
+        }
+      }
+
+      cv.cvtColor(diffMat2, diffMat, cv.COLOR_RGB2GRAY);
       // let R_value=0;
       // let G_value=0;
       // let B_value=0;
@@ -243,6 +257,7 @@ function successCallback(stream) {
           let new_lines = posLog[comp_length-1].concat();
           // let fuse_lines = fusion(targetLines); // 線の結合
           // new_lines = check_diff_color(diffMat2, targetLines);
+          new_lines = fusion(new_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
