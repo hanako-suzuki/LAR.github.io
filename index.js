@@ -262,7 +262,7 @@ function successCallback(stream) {
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<new_lines.length; i++){
-            if(new_lines[i][3] > comp_length * 0.6){
+            if(new_lines[i][3] > comp_length * 0){
               cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
               // データ送信箇所読み取り処理
 
