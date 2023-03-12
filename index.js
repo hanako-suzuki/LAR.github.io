@@ -254,15 +254,15 @@ function successCallback(stream) {
           }
         }
         if(posLog.length == comp_length){
-          let new_lines = posLog[comp_length-1].concat();
+          let target_lines = posLog[comp_length-1].concat();
           // let fuse_lines = fusion(targetLines); // 線の結合
           // new_lines = check_diff_color(diffMat2, targetLines);
-          new_lines = fusion(new_lines);
+          let new_lines = fusion(target_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = fusion(fuse_lines);
           // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
           for(let i=0; i<new_lines.length; i++){
-            if(new_lines[i][3] > comp_length * 0){
+            if(new_lines[i][3] >= comp_length * 0){
               cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
               // データ送信箇所読み取り処理
 
