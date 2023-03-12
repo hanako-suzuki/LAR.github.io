@@ -213,15 +213,15 @@ function successCallback(stream) {
                 if(s_y-5<startPoint.y & startPoint.y<e_y+5){
                   if(e_x+15<min_x || max_x+15<s_x){
                     posLog[i][j][3] += 1;
-                    let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
-                    let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
-                    let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
-                    startPoint.x = new_x0;
-                    startPoint.y = new_y;
-                    endPoint.x = new_x1;
-                    endPoint.y = new_y;
-                    posLog[i][j][0] = new cv.Point(new_x0, new_y);
-                    posLog[i][j][1] = new cv.Point(new_x1, new_y);
+                    // let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+                    // let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+                    // let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
+                    // startPoint.x = new_x0;
+                    // startPoint.y = new_y;
+                    // endPoint.x = new_x1;
+                    // endPoint.y = new_y;
+                    // posLog[i][j][0] = new cv.Point(new_x0, new_y);
+                    // posLog[i][j][1] = new cv.Point(new_x1, new_y);
                   }
                 }
                 // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
@@ -427,7 +427,7 @@ function successCallback(stream) {
       }
     }
     for(let i=0; i<colorData.length; i++){
-      if(colorData[i][0]>150 & colorData[i][1]>150 & colorData[i][2]<50){
+      if(colorData[i][0]>150 & colorData[i][1]>150 & colorData[i][2]<50){/* error          */
         colorData[i][3] = 1;
         lines_flag[cnt] = 1;
       }
