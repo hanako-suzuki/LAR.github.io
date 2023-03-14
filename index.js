@@ -209,7 +209,6 @@ function successCallback(stream) {
           else{
             theta = Math.PI/2;
           }
-          // let tmp_theta = theta*180/Math.PI;
           if(theta<0.1745){
             for(let i=1; i<posLog.length; i++){
               for(let j=0; j<posLog[i].length; j++){
