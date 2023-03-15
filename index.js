@@ -299,31 +299,31 @@ function successCallback(stream) {
           cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
         }
         posLog.pop();
-        // if(fuse_lines.length == 2){
-        //   if(window.confirm("ショッピングページに飛びますか？")){
-        //     // yes
-        //     // ソケット通信
-        //     connection = new WebSocket('ws://192.168.86.23:50000');
-        //     if (connection.readyState === WebSocket.OPEN) {
-        //       connectiont.send("change");
-        //       connection.close();
-        //       window.location.href = 'jump.html';
-        //     } else {
-        //       console.warn("websocket is not connected");
-        //     }
-        //     // //コネクションが接続された時の動き
-        //     // connection.onopen = function() {
-        //     //   console.log("コネクションを開始");
-        //     // };
-        //     // connection.send('change');
-        //     // var sendMsg = function(val) {//メッセージを送信するときのアクション
-        //     //   connection.send('line.value');//ソケットに送信
-        //     // };
-        //     // connection.close();
-        //     // macへジャンプ
-        //     window.location.href = 'jump.html';
-        //   }
-        // }
+        if(fuse_lines.length == 2){
+          if(window.confirm("ショッピングページに飛びますか？")){
+            // yes
+            // ソケット通信
+            connection = new WebSocket('ws://192.168.86.23:50000');
+            if (connection.readyState === WebSocket.OPEN) {
+              connectiont.send("change");
+              connection.close();
+              window.location.href = 'jump.html';
+            } else {
+              console.warn("websocket is not connected");
+            }
+            // //コネクションが接続された時の動き
+            // connection.onopen = function() {
+            //   console.log("コネクションを開始");
+            // };
+            // connection.send('change');
+            // var sendMsg = function(val) {//メッセージを送信するときのアクション
+            //   connection.send('line.value');//ソケットに送信
+            // };
+            // connection.close();
+            // macへジャンプ
+            window.location.href = 'jump.html';
+          }
+        }
 
         // if(posLog.length == comp_length){
         //   let target_lines = posLog[comp_length-1].concat();
