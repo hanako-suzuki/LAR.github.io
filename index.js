@@ -29,6 +29,8 @@ promise.then(successCallback)
        .catch(errorCallback);
 
 function successCallback(stream) {
+  // const connection = new WebSocket('ws://192.168.86.23:50000');
+
   video.srcObject = stream;
   const FPS = 30;
 
@@ -49,6 +51,8 @@ function successCallback(stream) {
 
   let read_flag = 0;
   let H_inv;
+
+  let connection;
 
 
   canvas.width = width;
@@ -92,19 +96,20 @@ function successCallback(stream) {
       // 差分取得 グレースケール
       let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
       cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+      // cv.imshow("canvas", diffMat);
       // 差分取得　カラー
-      // let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
-      // let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
-      // let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
-      // cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
-      // cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
-      // cv.absdiff(tmp_now, tmp_pre, diffMat2);
+      let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
+      let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
+      let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
+      cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
+      cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
+      cv.absdiff(tmp_now, tmp_pre, diffMat2);
 
       // 青の値が大きければ差分を消す
       // for(let i=0; i<height;i++){
       //   for(let j=0; j<width; j++){
       //     let data = diffMat2.ucharPtr(i,j);
-      //     if(data[2]>50){
+      //     if(data[0]<128 || data[1]<128 || data[2]<128){
       //       diffMat2.ucharPtr(i,j)[0] = 0;
       //       diffMat2.ucharPtr(i,j)[1] = 0;
       //       diffMat2.ucharPtr(i,j)[2] = 0;
@@ -209,78 +214,136 @@ function successCallback(stream) {
           else{
             theta = Math.PI/2;
           }
-          if(theta<0.1745){
-            for(let i=1; i<posLog.length; i++){
-              for(let j=0; j<posLog[i].length; j++){
-                let s_x = Math.min(posLog[i][j][0].x,posLog[i][j][1].x);
-                let s_y = posLog[i][j][0].y;
-                let e_x = Math.max(posLog[i][j][0].x,posLog[i][j][1].x);
-                let e_y = posLog[i][j][1].y;
-                // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
-                //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
-                //     posLog[i][j][3] += 1;
-                //   }
-                // }
-                let min_x = Math.min(startPoint.x, endPoint.x);
-                let max_x = Math.max(startPoint.x, endPoint.x);
-                if(s_y-5<startPoint.y & startPoint.y<e_y+5){
-                  if(e_x+15<min_x || max_x+15<s_x){
-                    posLog[i][j][3] += 1;
-                    // let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
-                    // let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
-                    // let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
-                    // startPoint.x = new_x0;
-                    // startPoint.y = new_y;
-                    // endPoint.x = new_x1;
-                    // endPoint.y = new_y;
-                    // posLog[i][j][0] = new cv.Point(new_x0, new_y);
-                    // posLog[i][j][1] = new cv.Point(new_x1, new_y);
-                  }
-                }
-                // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
-                //   // y座標が同じくらいなら線を結合
-                //   let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
-                //   let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
-                //   let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
-                //   startPoint.x = new_x0;
-                //   startPoint.y = new_y;
-                //   endPoint.x = new_x1;
-                //   endPoint.y = new_y;
-                // }
+          // let tmp_theta = theta*180/Math.PI;
+          if(theta<0.1745){ // if theta < 10rad
+            let pushFlag = 0;
+
+            // 青の値が大きければ差分を消す
+            let tmpFlag = 0;
+            for(let i=Math.min(startPoint.y, endPoint.y); i<=Math.max(startPoint.y, endPoint.y);i++){
+              let tmpR = 0;
+              let tmpG = 0;
+              let tmpB = 0;
+              for(let j=Math.min(startPoint.x, endPoint.x); j<=Math.max(startPoint.x, endPoint.x); j++){
+                let data = diffMat2.ucharPtr(j,i);
+                tmpR += data[0];
+                tmpG += data[1];
+                tmpB += data[2];
+              }
+              tmpR /= (Math.abs(startPoint.x-endPoint.x)+1);
+              tmpG /= (Math.abs(startPoint.x-endPoint.x)+1);
+              tmpB /= (Math.abs(startPoint.x-endPoint.x)+1);
+              if(tmpR>tmpG & tmpB>tmpG){
+                tmpFlag = 1;
               }
             }
-            posLog[0].push([startPoint, endPoint, theta, 0])
-          }
-        }
-        if(posLog.length == comp_length){
-          let target_lines = posLog[comp_length-1].concat();
-          // let fuse_lines = fusion(targetLines); // 線の結合
-          // new_lines = check_diff_color(diffMat2, targetLines);
-          let new_lines = fusion(target_lines);
-          // fuse_lines = fusion(fuse_lines);
-          // fuse_lines = fusion(fuse_lines);
-          // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
-          for(let i=0; i<new_lines.length; i++){
-            if(new_lines[i][3] >= comp_length * 0){
-              cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
-              // データ送信箇所読み取り処理
-
+            if(tmpFlag == 0){
+              continue;
             }
+
+            // for(let i=1; i<posLog.length; i++){
+            //   for(let j=0; j<posLog[i].length; j++){
+            //     let s_x = Math.min(posLog[i][j][0].x,posLog[i][j][1].x);
+            //     let s_y = posLog[i][j][0].y;
+            //     let e_x = Math.max(posLog[i][j][0].x,posLog[i][j][1].x);
+            //     let e_y = posLog[i][j][1].y;
+
+            //     // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
+            //     //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
+            //     //     posLog[i][j][3] += 1;
+            //     //   }
+            //     // }
+            //     let min_x = Math.min(startPoint.x, endPoint.x);
+            //     let max_x = Math.max(startPoint.x, endPoint.x);
+            //     if(s_y-15<startPoint.y & startPoint.y<e_y+15){
+            //       if(e_x+500<min_x || max_x+500<s_x){
+            //         posLog[i][j][3] += 1;
+            //         let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+            //         let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+            //         let new_y = parseInt((s_y + e_y + startPoint.y + endPoint.y)/4);
+            //         if(new_y != NaN){
+            //           startPoint.x = new_x0;
+            //           startPoint.y = new_y;
+            //           endPoint.x = new_x1;
+            //           endPoint.y = new_y;
+            //           posLog[i][j][0] = new cv.Point(new_x0, new_y);
+            //           posLog[i][j][1] = new cv.Point(new_x1, new_y);
+            //           pushFlag = 1;
+            //         }
+            //       }
+            //     }
+            //     // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
+            //     //   // y座標が同じくらいなら線を結合
+            //     //   let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+            //     //   let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+            //     //   let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
+            //     //   startPoint.x = new_x0;
+            //     //   startPoint.y = new_y;
+            //     //   endPoint.x = new_x1;
+            //     //   endPoint.y = new_y;
+            //     // }
+            //   }
+            // }
+            // if(pushFlag == 0){
+            //   posLog[0].push([startPoint, endPoint, theta, 0]);
+            // }
+
+            posLog[0].push([startPoint, endPoint, theta, 0]);
+            
+            // cv.line(videoMatPre, startPoint, endPoint, colorRed);
           }
-          // for(let i=0; i<targetLines.length; i++){
-          //   if(targetLines[i][3] > comp_length*0.8){
-          //     cv.line(videoMatPre, targetLines[i][0], targetLines[i][1], colorRed);
-          //   }
-          // }
-          posLog.pop(); // posLogの一番最後を削除
         }
+        let fuse_lines = fusion(posLog[0]);
+        // let fuse_lines = posLog[0].concat();
+        for(let i=0; i<fuse_lines.length; i++){
+          cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+        }
+        posLog.pop();
+        // if(fuse_lines.length == 2){
+        //   if(window.confirm("ショッピングページに飛びますか？")){
+        //     // yes
+        //     // ソケット通信
+        //     connection = new WebSocket('ws://192.168.86.23:50000');
+        //     if (connection.readyState === WebSocket.OPEN) {
+        //       connectiont.send("change");
+        //       connection.close();
+        //       window.location.href = 'jump.html';
+        //     } else {
+        //       console.warn("websocket is not connected");
+        //     }
+        //     // //コネクションが接続された時の動き
+        //     // connection.onopen = function() {
+        //     //   console.log("コネクションを開始");
+        //     // };
+        //     // connection.send('change');
+        //     // var sendMsg = function(val) {//メッセージを送信するときのアクション
+        //     //   connection.send('line.value');//ソケットに送信
+        //     // };
+        //     // connection.close();
+        //     // macへジャンプ
+        //     window.location.href = 'jump.html';
+        //   }
+        // }
+
+        // if(posLog.length == comp_length){
+        //   let target_lines = posLog[comp_length-1].concat();
+        //   // let fuse_lines = fusion(targetLines); // 線の結合
+        //   // new_lines = check_diff_color(diffMat2, targetLines);
+        //   let new_lines = fusion(target_lines);
+        //   // fuse_lines = fusion(fuse_lines);
+        //   // fuse_lines = fusion(fuse_lines);
+        //   // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
+        //   for(let i=0; i<new_lines.length; i++){
+        //     if(new_lines[i][3] >= comp_length * 0){
+        //       cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
+        //       // データ送信箇所読み取り処理
+
+        //     }
+        //   }
+        //   posLog.pop(); // posLogの一番最後を削除
+        // }
       }
       cv.imshow("canvas", videoMatPre);
-      // diffMat.delete();
-      // lines.delete();
-      // blackAndWhiteMatNow.delete();
-      // blackAndWhiteMatPre.delete();
-      // videoMatPre.delete();
     }
 
     videoMatPre = videoMatNow.clone();
@@ -300,9 +363,22 @@ function successCallback(stream) {
     }
     setTimeout(processVideo, delay);
     // processVideo();
-
   }
 
+  function createImageData(img){
+    var cv = document.createElement('canvas');
+
+    cv.width = img.naturalWidth;
+    cv.height = img.naturalHeight;
+
+    var ct = cv.getContext('2d');
+
+    ct.drawImage(img, 0, 0);
+
+    var data = ct.getImageData(0, 0, cv.width, cv.height);
+
+    return data;
+  }
   function integlate_lines(bare_lines, threshold_size, comp_length){
     // 同一の直線と思われる直線を統合する
 
@@ -348,6 +424,9 @@ function successCallback(stream) {
 
   function fusion(para_lines){
     // 各直線が他の直線と重なっているかを確認し重なっていれば融合
+    if(para_lines.length <1){
+      return para_lines;
+    }
 
     let fuse_lines = [];
     let fused_list = [];
@@ -366,7 +445,7 @@ function successCallback(stream) {
           }
         }
       }
-      fuse_lines.push([new_line,Math.abs(new_line[0].x-new_line[1].x),0]);
+      fuse_lines.push(new_line);
     }
 
     // let return_lines = [];
@@ -399,12 +478,12 @@ function successCallback(stream) {
       // ２つの線が十分に離れていれば終了
       return [lineA, 0];
     }
-    if(pA[0] > pB[1]+30 || pB[0] > pA[1]+30){
-      // 重なっていなければ終了
-      return [lineA, 0];
-    }
+    // if(pA[0] > pB[1]+30 & pB[0] > pA[1]+30){
+    //   // 重なっていなければ終了
+    //   return [lineA, 0];
+    // }
 
-    let y = (lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4;
+    let y = parseInt((lineA[0].y + lineA[1].y + lineB[0].y + lineB[1].y)/4);
     let x1 = Math.min(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
     let x2 = Math.max(lineA[0].x, lineA[1].x, lineB[0].x, lineB[1].x);
     let new_line = [new cv.Point(x1, y), new cv.Point(x2, y), 0, cnt];
@@ -428,24 +507,24 @@ function successCallback(stream) {
       let G_value = 0.0;
       let B_value = 0.0;
       for(let i=px[0]; i<=px[1]; i++){
-        for(let j=py-2; j<=py+2; j++){
-          let data = videoMatNow.ucharPtr(j,i);
-          R_value += data[0];
-          G_value += data[1];
-          B_value += data[2];
-        }
-        R_value /= (px[1]-px[0]+1);
-        G_value /= (px[1]-px[0]+1);
-        B_value /= (px[1]-px[0]+1);
-        colorData.push([R_value, G_value, B_value, 0]);
+        let data = videoMatNow.ucharPtr(j,i);
+        R_value += data[0];
+        G_value += data[1];
+        B_value += data[2];
       }
-    }
-    for(let i=0; i<colorData.length; i++){
-      if(colorData[i][0]>150 & colorData[i][1]>150 & colorData[i][2]<50){/* error          */
-        colorData[i][3] = 1;
+      R_value /= (px[1]-px[0]+1);
+      G_value /= (px[1]-px[0]+1);
+      B_value /= (px[1]-px[0]+1);
+      if(R_value>150 & G_value>150 & B_value<50){
         lines_flag[cnt] = 1;
       }
     }
+    // for(let i=0; i<colorData.length; i++){
+    //   if(colorData[i][0]>150 & colorData[i][1]>150 & colorData[i][2]<50){/* error          */
+    //     colorData[i][3] = 1;
+    //     lines_flag[cnt] = 1;
+    //   }
+    // }
 
     for(let i=lines_flag; i<lines_flag.length; i--){
       if(lines_flag[i]== 1){
@@ -552,12 +631,9 @@ function successCallback(stream) {
     }
     return H_inv;
   }
-};
+  // connection.close()
+}
 
 function errorCallback(err) {
   alert(err);
 };
-
-
-
-
