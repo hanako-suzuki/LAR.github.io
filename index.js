@@ -299,7 +299,7 @@ function successCallback(stream) {
           cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
         }
         posLog.pop();
-        if(fuse_lines.length == 2){
+        if(fuse_lines.length >= 2){
           if(window.confirm("ショッピングページに飛びますか？")){
             // yes
             // ソケット通信
