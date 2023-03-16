@@ -303,7 +303,7 @@ function successCallback(stream) {
           if(window.confirm("ショッピングページに飛びますか？")){
             // yes
             // ソケット通信
-            connection = new WebSocket('ws://192.168.86.23:50000');
+            connection = new WebSocket('ws://192.168.0.218:50000');
             if (connection.readyState === WebSocket.OPEN) {
               connectiont.send("change");
               connection.close();
