@@ -299,7 +299,7 @@ function successCallback(stream) {
           cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
         }
         posLog.pop();
-        if(fuse_lines.length >= 2){
+        if(fuse_lines.length == 2 & read_flag >50){
           if(window.confirm("ショッピングページに飛びますか？")){
             // yes
             // ソケット通信
@@ -356,7 +356,7 @@ function successCallback(stream) {
     // ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
     // ctx.stroke();          // パスを描画
 
-    read_flag = 1;
+    read_flag += 1;
     let delay = 1000 / FPS - (Date.now() - begin);
     if(delay<0){
       delay = 0;
