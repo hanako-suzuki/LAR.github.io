@@ -307,7 +307,7 @@ function successCallback(stream) {
             if (connection.readyState === WebSocket.OPEN) {
               connectiont.send("change");
               connection.close();
-              window.location.href = 'https://hanako-suzuki.github.io/VPIS.github.io/';
+              window.location.href = 'https://akitohiga.github.io/mac.github.io/';
             } else {
               console.warn("websocket is not connected");
             }
@@ -321,7 +321,7 @@ function successCallback(stream) {
             // };
             // connection.close();
             // macへジャンプ
-            window.location.href = 'https://hanako-suzuki.github.io/VPIS.github.io/';
+            window.location.href = 'https://akitohiga.github.io/mac.github.io/';
           }
         }
 
