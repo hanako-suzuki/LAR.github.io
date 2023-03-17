@@ -305,7 +305,7 @@ function successCallback(stream) {
             // yes
             // ソケット通信
             // connection = new WebSocket('ws://192.168.0.218:50000');
-            connection = new WebSocket('ws://192.168.86.23:50013');
+            connection = new WebSocket('ws://192.168.86.23:8080');
             if (connection.readyState === WebSocket.OPEN) {
               console.log("コネクションを開始");
               connectiont.send("change");
