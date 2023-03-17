@@ -62,350 +62,354 @@ function successCallback(stream) {
   // processVideo();
 
   function processVideo() {
-    const begin = Date.now();
+    try{
+      const begin = Date.now();
 
-    // ctx.drawImage(video, 0, 0, width, height);
-    ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
-    // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      // ctx.drawImage(video, 0, 0, width, height);
+      ctx.drawImage(video, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
+      // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
-    // videoMatPre.copyTo(videoMatNow);
-    // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
-    videoMatNow = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    // cv.imshow("canvas", videoMatNow);
-    // videoMatNow.data.set(cv.matFromImageData(imageData));
+      // videoMatPre.copyTo(videoMatNow);
+      // videoMatNow.data.set(ctx.getImageData(0, 0, width, height).data);
+      videoMatNow = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      // cv.imshow("canvas", videoMatNow);
+      // videoMatNow.data.set(cv.matFromImageData(imageData));
 
-    // const R_pilot = [200, 15, 2];
-    // const G_pilot = [35, 195, 2];
-    // const B_pilot = [10, 0, 185];
-    // if(read_flag == 0){
-    //   H_inv = calc_H(R_pilot, G_pilot, B_pilot);
-    // }
-    // color(videoMatNow, H_inv);
-    // cv.line(videoMatPre, (10,10),(10,11),(0,255,0),1);
-
-    // ２値化
-    cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
-    if(read_flag !=0){
-      cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
-      // cv.imshow("canvas", blackAndWhiteMatPre);
-    }
-    // cv.imshow("canvas", blackAndWhiteMatNow);
-
-  
-    if(read_flag != 0){
-      // 差分取得 グレースケール
-      let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
-      cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
-      // cv.imshow("canvas", diffMat);
-      // 差分取得　カラー
-      let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
-      let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
-      let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
-      cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
-      cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
-      cv.absdiff(tmp_now, tmp_pre, diffMat2);
-
-      // 青の値が大きければ差分を消す
-      // for(let i=0; i<height;i++){
-      //   for(let j=0; j<width; j++){
-      //     let data = diffMat2.ucharPtr(i,j);
-      //     if(data[0]<128 || data[1]<128 || data[2]<128){
-      //       diffMat2.ucharPtr(i,j)[0] = 0;
-      //       diffMat2.ucharPtr(i,j)[1] = 0;
-      //       diffMat2.ucharPtr(i,j)[2] = 0;
-      //     }
-      //   }
+      // const R_pilot = [200, 15, 2];
+      // const G_pilot = [35, 195, 2];
+      // const B_pilot = [10, 0, 185];
+      // if(read_flag == 0){
+      //   H_inv = calc_H(R_pilot, G_pilot, B_pilot);
       // }
+      // color(videoMatNow, H_inv);
+      // cv.line(videoMatPre, (10,10),(10,11),(0,255,0),1);
 
-      // cv.cvtColor(diffMat2, diffMat, cv.COLOR_RGB2GRAY);
-      // let R_value=0;
-      // let G_value=0;
-      // let B_value=0;
-      // for(let i=50; i<52;i++){
-      //   for(let j=50; j<52;j++){
-      //     let data = diffMat2.ucharPtr(i,j);
-      //     R_value += data[0]/4;
-      //     G_value += data[1]/4;
-      //     B_value += data[2]/4;
-      //   }
-      // }
-      // textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
-      // cv.imshow("canvas", diffMat2);
+      // ２値化
+      cv.cvtColor(videoMatNow, blackAndWhiteMatNow, cv.COLOR_RGB2GRAY);
+      if(read_flag !=0){
+        cv.cvtColor(videoMatPre, blackAndWhiteMatPre, cv.COLOR_RGB2GRAY);
+        // cv.imshow("canvas", blackAndWhiteMatPre);
+      }
+      // cv.imshow("canvas", blackAndWhiteMatNow);
 
-      // cv.cvtColor(diffMat, diffMat, cv.COLOR_RGB2GRAY);
-      // cv.imshow("canvas", diffMat);
+    
+      if(read_flag != 0){
+        // 差分取得 グレースケール
+        let diffMat = new cv.Mat(height, width, cv.CV_8UC1);
+        cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
+        // cv.imshow("canvas", diffMat);
+        // 差分取得　カラー
+        let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
+        let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
+        let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
+        cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
+        cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
+        cv.absdiff(tmp_now, tmp_pre, diffMat2);
 
-      // 矩形検出
-      // let rect = new cv.Rect(100, 100, 200, 200);
-      // let dst = diffMat.roi(rect);
-      // cv.imshow("canvas", dst);
-
-      // 線分検出 LSD
-      // const detector = new LSD();
-      // const lines = detector.detect(diffMat);
-      // detector.drawSegments(ctx, lines);
-
-      // 線分検出 Hough
-      if(diffMat.width!=NaN){
-        posLog.unshift([]); // posLogの一番最初に空の配列を追加
-
-        let y_position = [];
-        // cv.bitwise_not(diffMat, diffMat);
-        cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
-
-        // 始点と角度座標var.
-        // let straightLines = new cv.Mat();
-        // cv.HoughLines(diffMat, straightLines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
-        // // draw lines
-        // for (let i = 0; i < straightLines.rows; ++i) {
-        //   let rho = straightLines.data32F[i * 2];
-        //   let theta = straightLines.data32F[i * 2 + 1];
-        //   let tmp_theta = theta*180/Math.PI;
-        //   if((tmp_theta<100 & tmp_theta>80) || (tmp_theta>260 & tmp_theta<280)){
-        //     let a = Math.cos(theta);
-        //     let b = Math.sin(theta);
-        //     let x0 = a * rho;
-        //     let y0 = b * rho;
-        //     posLog[0].push([x0, y0, theta, 0])
-        //     for(let i=1; i<posLog.length; i++){
-        //       for(let j=0; j<posLog[i].length; j++){
-        //         let tmp_x = posLog[i][j][0];
-        //         let tmp_y = posLog[i][j][1];
-        //         if(tmp_x-5<x0 & x0<tmp_x+5 & tmp_y-5<y0 & y0 < tmp_y+5){
-        //           posLog[i][j][3] += 1;
-        //         }
-        //       }
+        // 青の値が大きければ差分を消す
+        // for(let i=0; i<height;i++){
+        //   for(let j=0; j<width; j++){
+        //     let data = diffMat2.ucharPtr(i,j);
+        //     if(data[0]<128 || data[1]<128 || data[2]<128){
+        //       diffMat2.ucharPtr(i,j)[0] = 0;
+        //       diffMat2.ucharPtr(i,j)[1] = 0;
+        //       diffMat2.ucharPtr(i,j)[2] = 0;
         //     }
-        //     if(posLog.length == comp_length){
-        //       for(let i=0; i<posLog[comp_length-1].length; i++){
-        //         if(posLog[comp_length-1][i][3] > comp_length*0.8){
-        //           let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-        //           let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-        //           cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
-        //         }
-        //       }
-              
-        //     }
-        //     // let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
-        //     // let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
-        //     // cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
         //   }
-        //   // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
         // }
 
-        // 始点と終点座標var.
-        let lines = new cv.Mat();
-        cv.HoughLinesP(diffMat, lines, 1, Math.PI / 180, 2, 0, 0);
-        // draw lines
-        for (let i = 0; i < lines.rows; ++i) {
-          let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
-          let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+        // cv.cvtColor(diffMat2, diffMat, cv.COLOR_RGB2GRAY);
+        // let R_value=0;
+        // let G_value=0;
+        // let B_value=0;
+        // for(let i=50; i<52;i++){
+        //   for(let j=50; j<52;j++){
+        //     let data = diffMat2.ucharPtr(i,j);
+        //     R_value += data[0]/4;
+        //     G_value += data[1]/4;
+        //     B_value += data[2]/4;
+        //   }
+        // }
+        // textArea.innerHTML = "R: " + String(R_value) + "G: " + String(G_value) + "B: " + String(B_value);
+        // cv.imshow("canvas", diffMat2);
 
-          if(startPoint.x == endPoint.x & startPoint.y == endPoint.y){
-            // 点は除去
-            continue;
-          }
+        // cv.cvtColor(diffMat, diffMat, cv.COLOR_RGB2GRAY);
+        // cv.imshow("canvas", diffMat);
 
-          // 線分の角度を求める
-          let theta;
-          if(startPoint.x != endPoint.x){
-            theta = Math.atan(Math.abs((startPoint.y-endPoint.y)/(startPoint.x-endPoint.x)));
-          }
-          else{
-            theta = Math.PI/2;
-          }
-          // let tmp_theta = theta*180/Math.PI;
-          if(theta<0.1745){ // if theta < 10rad
-            let pushFlag = 0;
+        // 矩形検出
+        // let rect = new cv.Rect(100, 100, 200, 200);
+        // let dst = diffMat.roi(rect);
+        // cv.imshow("canvas", dst);
 
-            // 青の値が大きければ差分を消す
-            let tmpFlag = 0;
-            for(let i=Math.min(startPoint.y, endPoint.y); i<=Math.max(startPoint.y, endPoint.y);i++){
-              let tmpR = 0;
-              let tmpG = 0;
-              let tmpB = 0;
-              for(let j=Math.min(startPoint.x, endPoint.x); j<=Math.max(startPoint.x, endPoint.x); j++){
-                let data = diffMat2.ucharPtr(j,i);
-                tmpR += data[0];
-                tmpG += data[1];
-                tmpB += data[2];
-              }
-              tmpR /= (Math.abs(startPoint.x-endPoint.x)+1);
-              tmpG /= (Math.abs(startPoint.x-endPoint.x)+1);
-              tmpB /= (Math.abs(startPoint.x-endPoint.x)+1);
-              if(tmpR>tmpG & tmpB>tmpG){
-                tmpFlag = 1;
-              }
-            }
-            if(tmpFlag == 0){
+        // 線分検出 LSD
+        // const detector = new LSD();
+        // const lines = detector.detect(diffMat);
+        // detector.drawSegments(ctx, lines);
+
+        // 線分検出 Hough
+        if(diffMat.width!=NaN){
+          posLog.unshift([]); // posLogの一番最初に空の配列を追加
+
+          let y_position = [];
+          // cv.bitwise_not(diffMat, diffMat);
+          cv.Canny(diffMat, diffMat, 50, 200, 3); // エッジ検出
+
+          // 始点と角度座標var.
+          // let straightLines = new cv.Mat();
+          // cv.HoughLines(diffMat, straightLines, 1, Math.PI / 180, 100, 0, 0, 0, Math.PI); // ハフ検出　始点と角度座標
+          // // draw lines
+          // for (let i = 0; i < straightLines.rows; ++i) {
+          //   let rho = straightLines.data32F[i * 2];
+          //   let theta = straightLines.data32F[i * 2 + 1];
+          //   let tmp_theta = theta*180/Math.PI;
+          //   if((tmp_theta<100 & tmp_theta>80) || (tmp_theta>260 & tmp_theta<280)){
+          //     let a = Math.cos(theta);
+          //     let b = Math.sin(theta);
+          //     let x0 = a * rho;
+          //     let y0 = b * rho;
+          //     posLog[0].push([x0, y0, theta, 0])
+          //     for(let i=1; i<posLog.length; i++){
+          //       for(let j=0; j<posLog[i].length; j++){
+          //         let tmp_x = posLog[i][j][0];
+          //         let tmp_y = posLog[i][j][1];
+          //         if(tmp_x-5<x0 & x0<tmp_x+5 & tmp_y-5<y0 & y0 < tmp_y+5){
+          //           posLog[i][j][3] += 1;
+          //         }
+          //       }
+          //     }
+          //     if(posLog.length == comp_length){
+          //       for(let i=0; i<posLog[comp_length-1].length; i++){
+          //         if(posLog[comp_length-1][i][3] > comp_length*0.8){
+          //           let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+          //           let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+          //           cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+          //         }
+          //       }
+                
+          //     }
+          //     // let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+          //     // let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+          //     // cv.line(videoMatPre, startPoint, endPoint, [255, 0, 0, 255]);
+          //   }
+          //   // cv.line(diffMat, startPoint, endPoint, [255, 0, 0, 255]);
+          // }
+
+          // 始点と終点座標var.
+          let lines = new cv.Mat();
+          cv.HoughLinesP(diffMat, lines, 1, Math.PI / 180, 2, 0, 0);
+          // draw lines
+          for (let i = 0; i < lines.rows; ++i) {
+            let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
+            let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+
+            if(startPoint.x == endPoint.x & startPoint.y == endPoint.y){
+              // 点は除去
               continue;
             }
 
-            // for(let i=1; i<posLog.length; i++){
-            //   for(let j=0; j<posLog[i].length; j++){
-            //     let s_x = Math.min(posLog[i][j][0].x,posLog[i][j][1].x);
-            //     let s_y = posLog[i][j][0].y;
-            //     let e_x = Math.max(posLog[i][j][0].x,posLog[i][j][1].x);
-            //     let e_y = posLog[i][j][1].y;
-
-            //     // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
-            //     //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
-            //     //     posLog[i][j][3] += 1;
-            //     //   }
-            //     // }
-            //     let min_x = Math.min(startPoint.x, endPoint.x);
-            //     let max_x = Math.max(startPoint.x, endPoint.x);
-            //     if(s_y-15<startPoint.y & startPoint.y<e_y+15){
-            //       if(e_x+500<min_x || max_x+500<s_x){
-            //         posLog[i][j][3] += 1;
-            //         let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
-            //         let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
-            //         let new_y = parseInt((s_y + e_y + startPoint.y + endPoint.y)/4);
-            //         if(new_y != NaN){
-            //           startPoint.x = new_x0;
-            //           startPoint.y = new_y;
-            //           endPoint.x = new_x1;
-            //           endPoint.y = new_y;
-            //           posLog[i][j][0] = new cv.Point(new_x0, new_y);
-            //           posLog[i][j][1] = new cv.Point(new_x1, new_y);
-            //           pushFlag = 1;
-            //         }
-            //       }
-            //     }
-            //     // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
-            //     //   // y座標が同じくらいなら線を結合
-            //     //   let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
-            //     //   let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
-            //     //   let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
-            //     //   startPoint.x = new_x0;
-            //     //   startPoint.y = new_y;
-            //     //   endPoint.x = new_x1;
-            //     //   endPoint.y = new_y;
-            //     // }
-            //   }
-            // }
-            // if(pushFlag == 0){
-            //   posLog[0].push([startPoint, endPoint, theta, 0]);
-            // }
-
-            posLog[0].push([startPoint, endPoint, theta, 0]);
-            
-            // cv.line(videoMatPre, startPoint, endPoint, colorRed);
-          }
-        }
-        let fuse_lines = fusion(posLog[0]);
-        // let fuse_lines = posLog[0].concat();
-        for(let i=0; i<fuse_lines.length; i++){
-          cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
-        }
-        posLog.pop();
-        if(fuse_lines.length == 2 & read_flag >50){
-          if(window.confirm("ショッピングページに飛びますか？")){
-
-            // yes
-            // ソケット通信
-            // connection = new WebSocket('ws://192.168.0.218:50000');
-            connection = new WebSocket('wss://192.168.86.23:8080');
-            textArea.innerHTML = String(connection.readyState);
-            if (connection.readyState === 1) {
-              console.log("コネクション成功");
-              connectiont.send("change");
-              connection.close();
-              window.location.href = 'https://akitohiga.github.io/mac.github.io/';
-            } else {
-              console.warn("websocket is not connected");
+            // 線分の角度を求める
+            let theta;
+            if(startPoint.x != endPoint.x){
+              theta = Math.atan(Math.abs((startPoint.y-endPoint.y)/(startPoint.x-endPoint.x)));
             }
-            // //コネクションが接続された時の動き
-            // connection.onopen = function() {
-            //   console.log("コネクションを開始");
-            //   connectiont.send("change");
-            //   connection.close();
-            //   // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
-            // };
-            // connection.send('change');
-            // var sendMsg = function(val) {//メッセージを送信するときのアクション
-            //   connection.send('line.value');//ソケットに送信
-            // };
-            // connection.close();
-            // macへジャンプ
-            // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+            else{
+              theta = Math.PI/2;
+            }
+            // let tmp_theta = theta*180/Math.PI;
+            if(theta<0.1745){ // if theta < 10rad
+              let pushFlag = 0;
 
+              // 青の値が大きければ差分を消す
+              let tmpFlag = 0;
+              for(let i=Math.min(startPoint.y, endPoint.y); i<=Math.max(startPoint.y, endPoint.y);i++){
+                let tmpR = 0;
+                let tmpG = 0;
+                let tmpB = 0;
+                for(let j=Math.min(startPoint.x, endPoint.x); j<=Math.max(startPoint.x, endPoint.x); j++){
+                  let data = diffMat2.ucharPtr(j,i);
+                  tmpR += data[0];
+                  tmpG += data[1];
+                  tmpB += data[2];
+                }
+                tmpR /= (Math.abs(startPoint.x-endPoint.x)+1);
+                tmpG /= (Math.abs(startPoint.x-endPoint.x)+1);
+                tmpB /= (Math.abs(startPoint.x-endPoint.x)+1);
+                if(tmpR>tmpG & tmpB>tmpG){
+                  tmpFlag = 1;
+                }
+              }
+              if(tmpFlag == 0){
+                continue;
+              }
 
-            // const io = require('socket.io-client');
-            // var socket = io.connect('http://192.168.86.23/');
-            // socket.on('connect', function(msg) {
-            //   console.log("connet");
-            //   SendMsg();
-            //   // document.getElementById("connectId").innerHTML = 
-            //   //   "あなたの接続ID::" + socket.socket.transport.sessid;
-            //   // document.getElementById("type").innerHTML = 
-            //   //   "接続方式::" + socket.socket.transport.name;
-            // });
+              // for(let i=1; i<posLog.length; i++){
+              //   for(let j=0; j<posLog[i].length; j++){
+              //     let s_x = Math.min(posLog[i][j][0].x,posLog[i][j][1].x);
+              //     let s_y = posLog[i][j][0].y;
+              //     let e_x = Math.max(posLog[i][j][0].x,posLog[i][j][1].x);
+              //     let e_y = posLog[i][j][1].y;
 
-            // // // メッセージを受けたとき
-            // // socket.on('message', function(msg) {
-            // //   // メッセージを画面に表示する
-            // //   document.getElementById("receiveMsg").innerHTML = msg.value;
-            // // });
+              //     // if(s_x-5<startPoint.x & startPoint.x<s_x+5 & s_y-5<startPoint.y & startPoint.y<s_y+5){
+              //     //   if(e_x-5<endPoint.x & endPoint.x<e_x+5 & e_y-5<endPoint.y & endPoint.y<e_y+5){
+              //     //     posLog[i][j][3] += 1;
+              //     //   }
+              //     // }
+              //     let min_x = Math.min(startPoint.x, endPoint.x);
+              //     let max_x = Math.max(startPoint.x, endPoint.x);
+              //     if(s_y-15<startPoint.y & startPoint.y<e_y+15){
+              //       if(e_x+500<min_x || max_x+500<s_x){
+              //         posLog[i][j][3] += 1;
+              //         let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+              //         let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+              //         let new_y = parseInt((s_y + e_y + startPoint.y + endPoint.y)/4);
+              //         if(new_y != NaN){
+              //           startPoint.x = new_x0;
+              //           startPoint.y = new_y;
+              //           endPoint.x = new_x1;
+              //           endPoint.y = new_y;
+              //           posLog[i][j][0] = new cv.Point(new_x0, new_y);
+              //           posLog[i][j][1] = new cv.Point(new_x1, new_y);
+              //           pushFlag = 1;
+              //         }
+              //       }
+              //     }
+              //     // if(startPoint.y-5 < s_y & s_y < startPoint.y+5){
+              //     //   // y座標が同じくらいなら線を結合
+              //     //   let new_x0 = Math.min(s_x, e_x, startPoint.x, endPoint.x);
+              //     //   let new_x1 = Math.max(s_x, e_x, startPoint.x, endPoint.x);
+              //     //   let new_y = (s_y + e_y + startPoint.y + endPoint.y)/4;
+              //     //   startPoint.x = new_x0;
+              //     //   startPoint.y = new_y;
+              //     //   endPoint.x = new_x1;
+              //     //   endPoint.y = new_y;
+              //     // }
+              //   }
+              // }
+              // if(pushFlag == 0){
+              //   posLog[0].push([startPoint, endPoint, theta, 0]);
+              // }
 
-            // // メッセージを送る
-            // function SendMsg() {
-            //   // var msg = document.getElementById("message").value;
-            //   // // メッセージを発射する
-            //   // socket.emit('message', { value: msg });
-            //   socket.emit('change');
-            // }
-            // // 切断する
-            // function DisConnect() {
-            //   var msg = socket.socket.transport.sessid + "は切断しました。";
-            //   // // メッセージを発射する
-            //   // socket.emit('message', { value: msg });
-            //   // socketを切断する
-            //   socket.disconnect();
-            // }
-
-
+              posLog[0].push([startPoint, endPoint, theta, 0]);
+              
+              // cv.line(videoMatPre, startPoint, endPoint, colorRed);
+            }
           }
+          let fuse_lines = fusion(posLog[0]);
+          // let fuse_lines = posLog[0].concat();
+          for(let i=0; i<fuse_lines.length; i++){
+            cv.line(videoMatPre, fuse_lines[i][0], fuse_lines[i][1], colorRed);
+          }
+          posLog.pop();
+          if(fuse_lines.length == 2 & read_flag >50){
+            if(window.confirm("ショッピングページに飛びますか？")){
+
+              // yes
+              // ソケット通信
+              // connection = new WebSocket('ws://192.168.0.218:50000');
+              connection = new WebSocket('wss://192.168.86.23:8080');
+              textArea.innerHTML = String(connection.readyState);
+              if (connection.readyState === 1) {
+                console.log("コネクション成功");
+                connectiont.send("change");
+                connection.close();
+                window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+              } else {
+                console.warn("websocket is not connected");
+              }
+              // //コネクションが接続された時の動き
+              // connection.onopen = function() {
+              //   console.log("コネクションを開始");
+              //   connectiont.send("change");
+              //   connection.close();
+              //   // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+              // };
+              // connection.send('change');
+              // var sendMsg = function(val) {//メッセージを送信するときのアクション
+              //   connection.send('line.value');//ソケットに送信
+              // };
+              // connection.close();
+              // macへジャンプ
+              // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+
+
+              // const io = require('socket.io-client');
+              // var socket = io.connect('http://192.168.86.23/');
+              // socket.on('connect', function(msg) {
+              //   console.log("connet");
+              //   SendMsg();
+              //   // document.getElementById("connectId").innerHTML = 
+              //   //   "あなたの接続ID::" + socket.socket.transport.sessid;
+              //   // document.getElementById("type").innerHTML = 
+              //   //   "接続方式::" + socket.socket.transport.name;
+              // });
+
+              // // // メッセージを受けたとき
+              // // socket.on('message', function(msg) {
+              // //   // メッセージを画面に表示する
+              // //   document.getElementById("receiveMsg").innerHTML = msg.value;
+              // // });
+
+              // // メッセージを送る
+              // function SendMsg() {
+              //   // var msg = document.getElementById("message").value;
+              //   // // メッセージを発射する
+              //   // socket.emit('message', { value: msg });
+              //   socket.emit('change');
+              // }
+              // // 切断する
+              // function DisConnect() {
+              //   var msg = socket.socket.transport.sessid + "は切断しました。";
+              //   // // メッセージを発射する
+              //   // socket.emit('message', { value: msg });
+              //   // socketを切断する
+              //   socket.disconnect();
+              // }
+
+
+            }
+          }
+
+          // if(posLog.length == comp_length){
+          //   let target_lines = posLog[comp_length-1].concat();
+          //   // let fuse_lines = fusion(targetLines); // 線の結合
+          //   // new_lines = check_diff_color(diffMat2, targetLines);
+          //   let new_lines = fusion(target_lines);
+          //   // fuse_lines = fusion(fuse_lines);
+          //   // fuse_lines = fusion(fuse_lines);
+          //   // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
+          //   for(let i=0; i<new_lines.length; i++){
+          //     if(new_lines[i][3] >= comp_length * 0){
+          //       cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
+          //       // データ送信箇所読み取り処理
+
+          //     }
+          //   }
+          //   posLog.pop(); // posLogの一番最後を削除
+          // }
         }
-
-        // if(posLog.length == comp_length){
-        //   let target_lines = posLog[comp_length-1].concat();
-        //   // let fuse_lines = fusion(targetLines); // 線の結合
-        //   // new_lines = check_diff_color(diffMat2, targetLines);
-        //   let new_lines = fusion(target_lines);
-        //   // fuse_lines = fusion(fuse_lines);
-        //   // fuse_lines = fusion(fuse_lines);
-        //   // fuse_lines = integlate_lines(fuse_lines, threshold_size, comp_length);
-        //   for(let i=0; i<new_lines.length; i++){
-        //     if(new_lines[i][3] >= comp_length * 0){
-        //       cv.line(videoMatPre, new_lines[i][0], new_lines[i][1], colorRed);
-        //       // データ送信箇所読み取り処理
-
-        //     }
-        //   }
-        //   posLog.pop(); // posLogの一番最後を削除
-        // }
+        cv.imshow("canvas", videoMatPre);
       }
-      cv.imshow("canvas", videoMatPre);
+
+      videoMatPre = videoMatNow.clone();
+      // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
+      // cv.imshow("canvas", videoMatPre);
+
+      // キャンバス上に線を描画
+      // ctx.beginPath();       // 新しいパスを開始
+      // ctx.moveTo(10, 10);    // ペンを (30, 50) へ移動
+      // ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
+      // ctx.stroke();          // パスを描画
+
+      read_flag += 1;
+      let delay = 1000 / FPS - (Date.now() - begin);
+      if(delay<0){
+        delay = 0;
+      }
+      setTimeout(processVideo, delay);
+      // processVideo();
+    }catch(e){
+      location.reload();
     }
-
-    videoMatPre = videoMatNow.clone();
-    // cv.line(videoMatPre, (10,10), (10, 11), (255, 0, 0), 1);
-    // cv.imshow("canvas", videoMatPre);
-
-    // キャンバス上に線を描画
-    // ctx.beginPath();       // 新しいパスを開始
-    // ctx.moveTo(10, 10);    // ペンを (30, 50) へ移動
-    // ctx.lineTo(11, 10);  // 直線を (150, 100) へ描く
-    // ctx.stroke();          // パスを描画
-
-    read_flag += 1;
-    let delay = 1000 / FPS - (Date.now() - begin);
-    if(delay<0){
-      delay = 0;
-    }
-    setTimeout(processVideo, delay);
-    // processVideo();
   }
 
   function createImageData(img){
