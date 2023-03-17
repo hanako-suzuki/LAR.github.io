@@ -329,7 +329,7 @@ function successCallback(stream) {
               // };
               // connection.close();
               // macへジャンプ
-              // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+              window.location.href = 'https://akitohiga.github.io/mac.github.io/';
 
 
               // const io = require('socket.io-client');
