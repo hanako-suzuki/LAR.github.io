@@ -306,17 +306,20 @@ function successCallback(stream) {
             // ソケット通信
             // connection = new WebSocket('ws://192.168.0.218:50000');
             connection = new WebSocket('ws://192.168.86.23:8080');
-            if (connection.readyState === WebSocket.OPEN) {
-              console.log("コネクションを開始");
+            if (connection.readyState === 1) {
+              console.log("コネクション成功");
               connectiont.send("change");
               connection.close();
               window.location.href = 'https://akitohiga.github.io/mac.github.io/';
             } else {
               console.warn("websocket is not connected");
             }
-            // //コネクションが接続された時の動き
+            //コネクションが接続された時の動き
             // connection.onopen = function() {
             //   console.log("コネクションを開始");
+            //   connectiont.send("change");
+            //   connection.close();
+            //   window.location.href = 'https://akitohiga.github.io/mac.github.io/';
             // };
             // connection.send('change');
             // var sendMsg = function(val) {//メッセージを送信するときのアクション
@@ -324,7 +327,7 @@ function successCallback(stream) {
             // };
             // connection.close();
             // macへジャンプ
-            window.location.href = 'https://akitohiga.github.io/mac.github.io/';
+            // window.location.href = 'https://akitohiga.github.io/mac.github.io/';
 
 
             // const io = require('socket.io-client');
