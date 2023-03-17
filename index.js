@@ -355,8 +355,8 @@ function successCallback(stream) {
         //       // socketを切断する
         //       socket.disconnect();
         //     }
-        //   }
-        // }
+          }
+        }
 
         // if(posLog.length == comp_length){
         //   let target_lines = posLog[comp_length-1].concat();
