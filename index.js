@@ -301,11 +301,13 @@ function successCallback(stream) {
         posLog.pop();
         if(fuse_lines.length == 2 & read_flag >50){
           if(window.confirm("ショッピングページに飛びますか？")){
+
             // yes
             // ソケット通信
             // connection = new WebSocket('ws://192.168.0.218:50000');
-            connection = new WebSocket('ws://192.168.86.23:50000');
+            connection = new WebSocket('ws://192.168.86.23:50013');
             if (connection.readyState === WebSocket.OPEN) {
+              console.log("コネクションを開始");
               connectiont.send("change");
               connection.close();
               window.location.href = 'https://akitohiga.github.io/mac.github.io/';
@@ -323,8 +325,38 @@ function successCallback(stream) {
             // connection.close();
             // macへジャンプ
             window.location.href = 'https://akitohiga.github.io/mac.github.io/';
-          }
-        }
+
+        //     var socket = io.connect('http://192.168.86.23/');
+        //     socket.on('connect', function(msg) {
+        //       console.log("connet");
+        //       document.getElementById("connectId").innerHTML = 
+        //         "あなたの接続ID::" + socket.socket.transport.sessid;
+        //       document.getElementById("type").innerHTML = 
+        //         "接続方式::" + socket.socket.transport.name;
+        //     });
+
+        //     // メッセージを受けたとき
+        //     socket.on('message', function(msg) {
+        //       // メッセージを画面に表示する
+        //       document.getElementById("receiveMsg").innerHTML = msg.value;
+        //     });
+
+        //     // メッセージを送る
+        //     function SendMsg() {
+        //       var msg = document.getElementById("message").value;
+        //       // メッセージを発射する
+        //       socket.emit('message', { value: msg });
+        //     }
+        //     // 切断する
+        //     function DisConnect() {
+        //       var msg = socket.socket.transport.sessid + "は切断しました。";
+        //       // メッセージを発射する
+        //       socket.emit('message', { value: msg });
+        //       // socketを切断する
+        //       socket.disconnect();
+        //     }
+        //   }
+        // }
 
         // if(posLog.length == comp_length){
         //   let target_lines = posLog[comp_length-1].concat();
