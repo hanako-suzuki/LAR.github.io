@@ -305,8 +305,8 @@ function successCallback(stream) {
 
               // yes
               // ソケット通信
-              // connection = new WebSocket('ws://192.168.0.218:8080');
-              connection = new WebSocket('wss://192.168.11.5:8080');
+              connection = new WebSocket('wss://192.168.0.223:8080');
+              // connection = new WebSocket('wss://192.168.11.5:8080');
               textArea.innerHTML = String(connection.readyState);
               if (connection.readyState === 1) {
                 console.log("コネクション成功");
