@@ -234,10 +234,10 @@ function successCallback(stream) {
                 tmpR /= (Math.abs(startPoint.x-endPoint.x)+1);
                 tmpG /= (Math.abs(startPoint.x-endPoint.x)+1);
                 tmpB /= (Math.abs(startPoint.x-endPoint.x)+1);
-                // if(tmpR>tmpG & tmpB>tmpG){
-                //   tmpFlag = 1;
-                // }
-                tmpFlag = 1
+                if(140<tmpR & tmpR<180 & tmpG<40 & 80<tmpB & tmpB<140){
+                  tmpFlag = 1;
+                }
+                // tmpFlag = 1
               }
               if(tmpFlag == 0){
                 continue;
