@@ -39,8 +39,10 @@ function successCallback(stream) {
   const height = video.clientHeight*4;
   const median = height/2;
 
-  let videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
-  let videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
+  // let videoMatPre = new cv.Mat(height, width, cv.CV_8UC4);
+  // let videoMatNow = new cv.Mat(height, width, cv.CV_8UC4);
+  let videoMatPre = new cv.Mat(height, width, cv.CV_8UC3);
+  let videoMatNow = new cv.Mat(height, width, cv.CV_8UC3);
   let blackAndWhiteMatPre = new cv.Mat(height, width, cv.CV_8UC1);
   let blackAndWhiteMatNow = new cv.Mat(height, width, cv.CV_8UC1);
 
@@ -99,12 +101,16 @@ function successCallback(stream) {
         cv.absdiff(blackAndWhiteMatNow, blackAndWhiteMatPre, diffMat);
         // cv.imshow("canvas", diffMat);
         // 差分取得　カラー
-        let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
-        let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
-        let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
-        cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
-        cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
-        cv.absdiff(tmp_now, tmp_pre, diffMat2);
+        // let diffMat2 = new cv.Mat(height, width, cv.CV_8UC4);
+        // let tmp_now = new cv.Mat(height, width, cv.CV_8UC4);
+        // let tmp_pre = new cv.Mat(height, width, cv.CV_8UC4);
+        // cv.cvtColor(videoMatNow, tmp_now, cv.COLOR_RGBA2RGB);
+        // cv.cvtColor(videoMatPre, tmp_pre, cv.COLOR_RGBA2RGB);
+        // cv.absdiff(tmp_now, tmp_pre, diffMat2);
+
+
+        let diffMat2 = new cv.Mat(height, width, cv.CV_8UC3);
+        cv.absdiff(videoMatNow, videoMatPre, diffMat2);
 
         // 青の値が大きければ差分を消す
         // for(let i=0; i<height;i++){
@@ -234,10 +240,10 @@ function successCallback(stream) {
                 tmpR /= (Math.abs(startPoint.x-endPoint.x)+1);
                 tmpG /= (Math.abs(startPoint.x-endPoint.x)+1);
                 tmpB /= (Math.abs(startPoint.x-endPoint.x)+1);
-                if(140<tmpR & tmpR<180 & tmpG<40 & 80<tmpB & tmpB<140){
-                  tmpFlag = 1;
-                }
-                // tmpFlag = 1
+                // if(140<tmpR & tmpR<180 & tmpG<40 & 80<tmpB & tmpB<140){
+                //   tmpFlag = 1;
+                // }
+                tmpFlag = 1
               }
               if(tmpFlag == 0){
                 continue;
